@@ -39,7 +39,7 @@ INC_LIBFT =		-I ./libft
 
 #sources
 SRC_PATH =	src/
-SRC = 	so_long.c map_check.c
+SRC = 	so_long.c map_check.c map_check_utils.c utils.c
 SRCS =	$(addprefix $(SRC_PATH), $(SRC))
 
 #objects
@@ -50,7 +50,7 @@ OBJS =		$(addprefix $(OBJ_PATH), $(OBJ))
 all: libft libmlx $(NAME)
 
 $(OBJ_PATH)%.o :$(SRC_PATH)%.c
-	@$(CC) -c $< -o $@ $(INC_LIBMLX) $(INC_LIBFT)
+	@$(CC) $(CFLAGS) -c $< -o $@ $(INC_LIBMLX) $(INC_LIBFT)
 
 $(OBJS): $(OBJ_PATH)
 
