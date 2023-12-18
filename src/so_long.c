@@ -12,233 +12,166 @@
 
 #include "solong.h"
 
-// int pos_y = HEIGHT/2;
-// int pos_x = WIDTH/2;
+static void error(void)
+{
+	ft_putstr_fd((char *) mlx_strerror(mlx_errno), 2);
+	exit(EXIT_FAILURE);
+}
 
-// void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+t_images	*load_images(mlx_t *mlx)
+{
+	t_images	*images;
+
+	images = (t_images *) malloc(1 * sizeof(t_images));
+	if (!images)
+		error();
+	images->player_tex = mlx_load_png("./img/Wizard_Man_64x64.png");
+	if (!images->player_tex)
+		error();
+	images->player_img = mlx_texture_to_image(mlx, images->player_tex);
+	if (!images->player_img)
+		error();
+	images->wall_tex = mlx_load_png("./img/Wall_64x64.png");
+	if (!images->wall_tex)
+		error();
+	images->wall_img = mlx_texture_to_image(mlx, images->wall_tex);
+	if (!images->wall_img)
+		error();
+	images->consumable_tex = mlx_load_png("./img/Consumable_64x64.png");
+	if (!images->consumable_tex)
+		error();
+	images->consumable_img = mlx_texture_to_image(mlx, images->consumable_tex);
+	if (!images->consumable_img)
+		error();
+	images->exit_tex = mlx_load_png("./img/gate_closed_64x64.png");
+	if (!images->exit_tex)
+		error();
+	images->exit_img = mlx_texture_to_image(mlx, images->exit_tex);
+	if (!images->exit_img)
+		error();
+	return (images);
+}
+
+void	ft_put_sprite(mlx_t *mlx, mlx_image_t *img, t_map *map, char symbol)
+{
+	size_t	x;
+	size_t	y;
+
+	y = 0;
+	while (map->array[y])
+	{
+		x = 0;
+		while (map->array[y][x])
+		{
+			if (map->array[y][x] == symbol)
+			{
+				if (mlx_image_to_window(mlx, img, x * BLOCK_WIDTH, y * BLOCK_HEIGHT) < 0)
+					error();
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
+void my_keyhook(mlx_key_data_t keydata, void* param)
+{
+	t_game *game;
+	size_t	*x_player;
+	size_t	*y_player;
+
+	game = (t_game*) param;
+	x_player = &game->map->x_player;
+	y_player = &game->map->y_player;
+	if (keydata.key == MLX_KEY_W && keydata.action == MLX_PRESS && *y_player > 1 && (game->map->array[*y_player - 1][*x_player] != '1'))
+	{
+		game->images->player_img->instances[0].y -= BLOCK_WIDTH;
+		*y_player -= 1;
+	}
+	if (keydata.key == MLX_KEY_A && keydata.action == MLX_PRESS && *x_player > 1 && (game->map->array[*y_player][*x_player - 1] != '1'))
+	{
+		game->images->player_img->instances[0].x -= BLOCK_WIDTH;
+		*x_player -= 1;
+	}
+	if (keydata.key == MLX_KEY_S && keydata.action == MLX_PRESS && (*y_player < (game->map->y - 2)) && (game->map->array[*y_player + 1][*x_player] != '1'))
+	{
+		game->images->player_img->instances[0].y += BLOCK_WIDTH;
+		*y_player += 1;
+	}
+	if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS && *x_player < (game->map->x - 2) && (game->map->array[*y_player][*x_player + 1] != '1'))
+	{
+		game->images->player_img->instances[0].x += BLOCK_WIDTH;
+		*x_player += 1;
+	}
+	if (game->map->array[*y_player][*x_player] == 'C')
+	{
+		ft_putstr_fd("You have collected one consumable.\n", 1);
+		game->map->array[*y_player][*x_player] = 'c';
+		size_t	i;
+		i = 0;
+		while (i < game->images->consumable_img->count)
+		{
+			if ((size_t) game->images->consumable_img->instances[i].x/BLOCK_WIDTH == *x_player && (size_t) game->images->consumable_img->instances[i].y/BLOCK_HEIGHT == *y_player)
+				game->images->consumable_img->instances[i].enabled = 0;
+			i++;
+		}
+		game->map->to_collect -= 1;
+		if (game->map->to_collect == 0)
+		{
+			game->map->exit_open = 1;
+			ft_putstr_fd("Everything is collected! Go to exit\n", 1);
+			mlx_delete_image(game->mlx, game->images->exit_img);
+			game->images->exit_tex = mlx_load_png("./img/gate_opened_64x64.png");
+			if (!game->images->exit_tex)
+				error();
+			game->images->exit_img = mlx_texture_to_image(game->mlx, game->images->exit_tex);
+			if (!game->images->exit_img)
+				error();
+			ft_put_sprite(game->mlx, game->images->exit_img, game->map, 'E');
+		}
+	}
+	if (game->map->exit_open == 1 && game->map->array[*y_player][*x_player] == 'E')
+	{
+		game->map->array[*y_player][*x_player] = 'e';
+		ft_putstr_fd("You won!\n", 1);
+		free_array(game->map->array); //freeing needs to be better
+		free(game->map);
+		mlx_terminate(game->mlx); //got segfault
+	}
+}
+
+int32_t	main(int argc, char **argv)
+{
+	t_game		*game;
+
+	game = (t_game*) malloc(1 * sizeof(t_game));
+	if (argc == 2)
+		game->map = get_map(argv[1]);
+	else
+		ft_putstr_fd("Error: ./so_long MAP_NAME.ber\n", 2);
+	if (!(game->mlx = mlx_init(game->map->x * BLOCK_WIDTH, game->map->y * BLOCK_HEIGHT, "So long - The mystic magician", true)))
+		return (EXIT_FAILURE);
+	game->images = load_images(game->mlx);
+	ft_put_sprite(game->mlx, game->images->wall_img, game->map, '1');
+	ft_put_sprite(game->mlx, game->images->exit_img, game->map, 'E');
+	ft_put_sprite(game->mlx, game->images->consumable_img, game->map, 'C');
+	game->map->to_collect = game->images->consumable_img->count; // how many consumables to collect
+	ft_put_sprite(game->mlx, game->images->player_img, game->map, 'P');
+	mlx_key_hook(game->mlx, &my_keyhook, (void*) game);
+	mlx_loop(game->mlx);
+	mlx_terminate(game->mlx);
+	return (EXIT_SUCCESS);
+}
+
+
+// int	main (int argc, char **argv)
 // {
-// 	char	*dst;
-
-// 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-// 	*(unsigned int*)dst = color;
-// }
-
-// /**
-//  * Creates a 32-bit color value (ARGB format) from individual color components.
-//  * @param t The alpha value (transparency) in the range [0, 255].
-//  * @param r The red color component in the range [0, 255].
-//  * @param g The green color component in the range [0, 255].
-//  * @param b The blue color component in the range [0, 255].
-//  * @return The combined 32-bit color value in ARGB format (0xTTRRGGBB).
-//  */
-// int	create_trgb(int t, int r, int g, int b)
-// {
-// 	return (t << 24 | r << 16 | g << 8 | b);
-// }
-
-// // keycode = what is pressed
-// // x, y = xy coordinates in mouse position
-// int	mouse_click(int keycode, int x, int y, t_data *vars)
-// {
-// 	if (keycode == 1)
-// 	{
-// 		ft_putstr_fd("Left click\n", 1);
-// 	}
-// 	else if (keycode == 2)
-// 	{
-// 		ft_putstr_fd("Middle click\n", 1);
-// 	}
-// 	else if (keycode == 3)
-// 	{
-// 		ft_putstr_fd("Right click\n", 1);
-// 	}
-// 	else if (keycode == 4)
-// 	{
-// 		ft_putstr_fd("Scrool up\n", 1);
-// 	}
-// 	else if (keycode == 5)
-// 	{
-// 		ft_putstr_fd("Scrool down\n", 1);
-// 	}
-// 	return (0);
-// }
-
-// int	pressed_key(int keycode, t_data *vars)
-// {
-// 	int x = 10;
-// 	int y = 10;
-// 	int i = 0;
-// 	int j = 0;
-
-// 	ft_putnbr_fd(keycode, 1);
-// 	ft_putchar_fd('\n', 1);
-// 	vars->img = mlx_new_image(vars->mlx, WIDTH, HEIGHT);
-// 	vars->addr = mlx_get_data_addr(vars->img, &vars->bits_per_pixel, &vars->line_length, &vars->endian);
-// 	while (j < WIDTH)
-// 	{
-// 		while (i < HEIGHT)
-// 			my_mlx_pixel_put(vars, 0 + j, 0 + i++, create_trgb(0, 255-i/4, 255-j/4, 0));
-// 		j++;
-// 		i = 0;
-// 	}
-// 	mlx_put_image_to_window(vars->mlx, vars->win, vars->img, 0, 0);
-// 	if (keycode == XK_w)
-// 	{
-// 		pos_y -= 50;
-// 		vars->img = mlx_xpm_file_to_image(vars->mlx, "./img/Mario.xpm", &x, &y);
-// 		mlx_put_image_to_window(vars->mlx, vars->win, vars->img, pos_x, pos_y);
-// 	}
-// 	else if (keycode == XK_s)
-// 	{
-// 		pos_y += 50;
-// 		vars->img = mlx_xpm_file_to_image(vars->mlx, "./img/Mario.xpm", &x, &y);
-// 		mlx_put_image_to_window(vars->mlx, vars->win, vars->img, pos_x, pos_y);
-// 	}
-// 	else if (keycode == XK_a)
-// 	{
-// 		pos_x -= 50;
-// 		vars->img = mlx_xpm_file_to_image(vars->mlx, "./img/Mario.xpm", &x, &y);
-// 		mlx_put_image_to_window(vars->mlx, vars->win, vars->img, pos_x, pos_y);
-// 	}
-// 	else if (keycode == XK_d)
-// 	{
-// 		pos_x += 50;
-// 		vars->img = mlx_xpm_file_to_image(vars->mlx, "./img/Mario.xpm", &x, &y);
-// 		mlx_put_image_to_window(vars->mlx, vars->win, vars->img, pos_x, pos_y);
-// 	}
-// 	else
-// 	{
-// 		vars->img = mlx_xpm_file_to_image(vars->mlx, "./img/Mario.xpm", &x, &y);
-// 		mlx_put_image_to_window(vars->mlx, vars->win, vars->img, pos_x, pos_y);
-// 	}
-// 	mlx_string_put(vars->mlx, vars->win, WIDTH * 0.9, HEIGHT * 0.98, create_trgb(0, 0, 255, 0), "Test string!");
-// 	return (0);
-// }
-
-// int	close_win_key(int keycode, t_data *vars)
-// {
-// 	if (keycode == XK_Escape)
-// 	{
-// 		mlx_destroy_image(vars->mlx, vars->img);
-// 		mlx_destroy_window(vars->mlx, vars->win);
-// 		mlx_destroy_display(vars->mlx);
-// 		free(vars->mlx);
-// 		exit(0);
-// 	}
-// 	else
-// 		pressed_key(keycode, vars);
-// 	return (0);
-// }
-
-// int	close_win_cross(int keycode, t_data *vars)
-// {
-// 	mlx_destroy_image(vars->mlx, vars->img);
-// 	mlx_destroy_window(vars->mlx, vars->win);
-// 	mlx_destroy_display(vars->mlx);
-// 	free(vars->mlx);
-// 	exit(0);
-// }
-
-// int	main(int argc, char **argv)
-// {
-// 	t_data	img;
-// 	int	i;
-// 	int	j;
+// 	char	**map_arr;
 
 // 	if (argc == 2)
-// 		map_check(argv[1]);
-// 	img.mlx = mlx_init();
-// 	if (img.mlx == NULL)
 // 	{
-// 		return (1);
+// 		map_arr = map_check(argv[1]);
+// 		free_array(map_arr);
 // 	}
-// 	img.win = mlx_new_window(img.mlx, WIDTH, HEIGHT, "So Long!");
-// 	if (img.win == NULL)
-// 	{
-// 		mlx_destroy_display(img.mlx);
-// 		free(img.mlx);
-// 		return (1);
-// 	}
-// 	mlx_mouse_hide(img.mlx, img.win);
-// 	img.img = mlx_new_image(img.mlx, WIDTH, HEIGHT);
-// 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
-// 	i = 0;
-// 	j = 0;
-// 	while (j < WIDTH)
-// 	{
-// 		while (i < HEIGHT)
-// 			my_mlx_pixel_put(&img, 0 + j, 0 + i++, create_trgb(0, 255-i/4, 255-j/4, 0));
-// 		j++;
-// 		i = 0;
-// 	}
-// 	mlx_put_image_to_window(img.mlx, img.win, img.img, 0, 0);
-// 	int x = 10;
-// 	int y = 10;
-// 	img.img = mlx_xpm_file_to_image(img.mlx, "./img/Mario.xpm", &x, &y);
-// 	mlx_put_image_to_window(img.mlx, img.win, img.img, pos_x, pos_y);
-// 	//clicking any key in the corner of window
-// 	mlx_hook(img.win, 2, 1L<<0, close_win_key, &img);
-// 	//clicking the CROSS in the corner of window - got segfault - WHY?
-// 	mlx_hook(img.win, 17, 1L<<0, close_win_cross, &img);
-// 	mlx_mouse_hook(img.win, mouse_click, &img);
-// 	mlx_string_put(img.mlx, img.win, WIDTH * 0.9, HEIGHT * 0.98, create_trgb(0, 0, 255, 0), "Test string!");
-// 	// keeps the proces alive with looping
-// 	mlx_loop(img.mlx);
 // 	return (0);
-// 	}
-
-// #include <stdio.h>
-// // Exit the program as failure.
-// static void ft_error(void)
-// {
-// 	fprintf(stderr, "%s", mlx_strerror(mlx_errno));
-// 	exit(EXIT_FAILURE);
 // }
-
-// // Print the window width and height.
-// static void ft_hook(void* param)
-// {
-// 	const mlx_t* mlx = param;
-
-// 	printf("WIDTH: %d | HEIGHT: %d\n", mlx->width, mlx->height);
-// }
-
-// int32_t	main(void)
-// {
-
-// 	// MLX allows you to define its core behaviour before startup.
-// 	mlx_set_setting(MLX_MAXIMIZED, true);
-// 	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "42Balls", true);
-// 	if (!mlx)
-// 		ft_error();
-
-// 	/* Do stuff */
-
-// 	// Create and display the image.
-// 	mlx_image_t* img = mlx_new_image(mlx, 256, 256);
-// 	if (!img || (mlx_image_to_window(mlx, img, 0, 0) < 0))
-// 		ft_error();
-
-// 	// Even after the image is being displayed, we can still modify the buffer.
-// 	mlx_put_pixel(img, 0, 0, 0xFF0000FF);
-
-// 	// Register a hook and pass mlx as an optional param.
-// 	// NOTE: Do this before calling mlx_loop!
-// 	mlx_loop_hook(mlx, ft_hook, mlx);
-// 	mlx_loop(mlx);
-// 	mlx_terminate(mlx);
-// 	return (EXIT_SUCCESS);
-// }
-
-
-int	main (int argc, char **argv)
-{
-	char	**map_arr;
-
-	if (argc == 2)
-	{
-		map_arr = map_check(argv[1]);
-		free_array(map_arr);
-	}
-	return (0);
-}

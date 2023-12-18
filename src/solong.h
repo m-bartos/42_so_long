@@ -13,8 +13,8 @@
 #ifndef SOLONG_H
 # define SOLONG_H
 
-# define WIDTH 1000
-# define HEIGHT 800
+# define BLOCK_WIDTH 64
+# define BLOCK_HEIGHT 64
 
 # include "../lib/MLX42/include/MLX42/MLX42.h"
 # include "../lib/libft/libft.h"
@@ -29,12 +29,34 @@
 # include <fcntl.h>
 
 typedef struct	map {
-	size_t	i_pos;
-	size_t	j_pos;
+	char	**array;
+	size_t	x;
+	size_t	y;
+	size_t	x_player;
+	size_t	y_player;
+	size_t	to_collect;
+	size_t	exit_open;
 }			t_map;
 
+typedef struct	images {
+	mlx_texture_t	*exit_tex;
+	mlx_image_t		*exit_img;
+	mlx_texture_t	*consumable_tex;
+	mlx_image_t		*consumable_img;
+	mlx_texture_t	*player_tex;
+	mlx_image_t		*player_img;
+	mlx_texture_t	*wall_tex;
+	mlx_image_t		*wall_img;
+}			t_images;
+
+typedef struct	game {
+	mlx_t		*mlx;
+	t_map		*map;
+	t_images	*images;
+}			t_game;
+
 // map_check.c
-char	**map_check(char *str);
+t_map	*get_map(char *str);
 
 // map_utils.c
 char	**map_to_array(int fd);
