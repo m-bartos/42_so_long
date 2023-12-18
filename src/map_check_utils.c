@@ -68,24 +68,24 @@ char	**map_file_to_array(char *map_name)
 
 void	get_P_pos(char **map_array, t_map *map)
 {
-	size_t	i;
-	size_t	j;
+	size_t	y;
+	size_t	x;
 
-	i = 0;
-	while (map_array[i])
+	y = 0;
+	while (map_array[y])
 	{
-		j = 0;
-		while(map_array[i][j])
+		x = 0;
+		while(map_array[y][x])
 		{
-			if (map_array[i][j] == 'P')
+			if (map_array[y][x] == 'P')
 			{
-				map->i_pos = i;
-				map->j_pos = j;
+				map->x_player = x;
+				map->y_player = y;
 				return;
 			}
-			j++;
+			x++;
 		}
-		i++;
+		y++;
 	}
 }
 

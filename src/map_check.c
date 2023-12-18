@@ -36,7 +36,7 @@ void	check_suffix(char *str)
 	size_t	suf_len;
 	size_t	i;
 
-	suf = ft_strdup(".bek");
+	suf = ft_strdup(".ber");
 	str_len = ft_strlen(str);
 	suf_len = ft_strlen(suf);
 	i = 0;
@@ -156,12 +156,13 @@ void	check_closed_map(char **map_array)
  * 
  * @return void
  */
-char	**map_check(char *str)
+t_map	*get_map(char *str)
 {
-	t_map	map;
+	t_map	*map;
 	char	**map_array;
 	char	**map_flooded;
 
+	map = (t_map*) malloc(sizeof(t_map) * 1);
 	ft_putstr_fd("-------------------\n", 1);
 	ft_putstr_fd("-RUNNING_MAP_CHECK-\n", 1);
 	ft_putstr_fd("-------------------\n", 1);
@@ -175,16 +176,20 @@ char	**map_check(char *str)
 	// checking the map is closed (1 at the borders)
 	check_closed_map(map_array);
 	// get_possition of P - player
-	get_P_pos(map_array, &map);
+	get_P_pos(map_array, map);
 	// duplicate the array
 	map_flooded = ft_arrdup(map_array);
 	// checking if it is possible to reach all the consumable and end from start - flood algorithm
-	map_flood_fill(map_flooded, map.i_pos, map.j_pos);
+	map_flood_fill(map_flooded, map->x_player, map->y_player);
 	// check the number of player positions P == 1, exists == 1 and collectibles >= 1
 	check_nof_PEC(map_array, map_flooded);
 	ft_putstr_fd("-------------------\n", 1);
 	ft_putstr_fd("---MAP_CHECK_OK----\n", 1);
 	ft_putstr_fd("-------------------\n", 1);
+	map->array = map_array;
+	map->x = ft_strlen(map->array[0]);
+	map->y = ft_arrlen(map->array);
+	map->exit_open = 0;
 	free_array(map_flooded);
-	return (map_array);
+	return (map);
 }
