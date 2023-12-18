@@ -148,7 +148,11 @@ int32_t	main(int argc, char **argv)
 	if (argc == 2)
 		game->map = get_map(argv[1]);
 	else
-		ft_putstr_fd("Error: ./so_long MAP_NAME.ber\n", 2);
+	{
+		ft_putstr_fd("Error: Two arguments needed. Format: ./so_long MAP_NAME.ber\n", 2);
+		ft_putstr_fd("Try run with: ./so_long map1.ber\n", 1);
+		return (1);
+	}
 	if (!(game->mlx = mlx_init(game->map->x * BLOCK_WIDTH, game->map->y * BLOCK_HEIGHT, "So long - The mystic magician", true)))
 		return (EXIT_FAILURE);
 	game->images = load_images(game->mlx);
@@ -162,16 +166,3 @@ int32_t	main(int argc, char **argv)
 	mlx_terminate(game->mlx);
 	return (EXIT_SUCCESS);
 }
-
-
-// int	main (int argc, char **argv)
-// {
-// 	char	**map_arr;
-
-// 	if (argc == 2)
-// 	{
-// 		map_arr = map_check(argv[1]);
-// 		free_array(map_arr);
-// 	}
-// 	return (0);
-// }
