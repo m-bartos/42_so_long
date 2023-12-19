@@ -57,7 +57,7 @@ void	check_suffix(char *str)
 	free(suf);
 }
 
-void	check_nof_PEC(char **map_array, char **map_flooded)
+void	check_of_pec(char **map_array, char **map_flooded)
 {
 	if (count_char_in_arr(map_array, 'E') == 1 && count_char_in_arr(map_flooded, 'e'))
 		ft_putstr_fd("Correct number of exits\n", 1);
@@ -173,7 +173,7 @@ t_map	*get_map(char *str)
 	get_P_pos(map_array, map);
 	map_flooded = ft_arrdup(map_array);
 	map_flood_fill(map_flooded, map->y_player, map->x_player);
-	check_nof_PEC(map_array, map_flooded);
+	check_of_pec(map_array, map_flooded);
 	ft_putstr_fd("-------------------\n", 1);
 	ft_putstr_fd("---MAP_CHECK_OK----\n", 1);
 	ft_putstr_fd("-------------------\n\n", 1);
