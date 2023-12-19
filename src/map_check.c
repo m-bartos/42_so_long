@@ -159,7 +159,7 @@ t_map	*get_map(char *str)
 	map_array = map_file_to_array(str);
 	check_rectang_map(map_array);
 	check_closed_map(map_array);
-	get_P_pos(map_array, map);
+	get_player_pos(map_array, map);
 	map_flooded = ft_arrdup(map_array);
 	map_flood_fill(map_flooded, map->y_player, map->x_player);
 	check_of_pec(map_array, map_flooded);

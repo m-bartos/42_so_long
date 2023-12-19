@@ -82,7 +82,7 @@ t_map	*get_map(char *str);
 // map_utils.c
 char	**map_to_array(int fd);
 char	**map_file_to_array(char *map_name);
-void	get_P_pos(char **map_array, t_map *map);
+void	get_player_pos(char **map_array, t_map *map);
 void	map_flood_fill(char **map_array, size_t y, size_t x);
 
 // utils.c:
