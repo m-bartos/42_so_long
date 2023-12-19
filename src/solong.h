@@ -86,6 +86,17 @@ void	get_P_pos(char **map_array, t_map *map);
 void	map_flood_fill(char **map_array, size_t y, size_t x);
 
 // utils.c:
+
+/**
+ * Calculates the length of a null-terminated array of strings.
+ * 
+ * @param arr Pointer to a null-terminated array of strings.
+ * 
+ * Description:
+ * - Counts the number of strings in the array until encountering a NULL pointer.
+ * 
+ * @return The number of strings in the array.
+ */
 int		ft_arrlen(char **arr);
 char	**ft_arrdup(char **arr);
 int		free_array(char **array);
