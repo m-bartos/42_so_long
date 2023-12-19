@@ -79,6 +79,7 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 	t_game *game;
 	size_t	*x_player;
 	size_t	*y_player;
+	char	*old_str;
 
 	game = (t_game*) param;
 	x_player = &game->map->x_player;
@@ -87,25 +88,33 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 	{
 		game->images->player_img->instances[0].y -= BLOCK_WIDTH;
 		*y_player -= 1;
+		game->moves += 1;
+		ft_printf("Moves: %d\n", game->moves);
 	}
 	if (keydata.key == MLX_KEY_A && keydata.action == MLX_PRESS && *x_player > 1 && (game->map->array[*y_player][*x_player - 1] != '1'))
 	{
 		game->images->player_img->instances[0].x -= BLOCK_WIDTH;
 		*x_player -= 1;
+		game->moves += 1;
+		ft_printf("Moves: %d\n", game->moves);
 	}
 	if (keydata.key == MLX_KEY_S && keydata.action == MLX_PRESS && (*y_player < (game->map->y - 2)) && (game->map->array[*y_player + 1][*x_player] != '1'))
 	{
 		game->images->player_img->instances[0].y += BLOCK_WIDTH;
 		*y_player += 1;
+		game->moves += 1;
+		ft_printf("Moves: %d\n", game->moves);
 	}
 	if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS && *x_player < (game->map->x - 2) && (game->map->array[*y_player][*x_player + 1] != '1'))
 	{
 		game->images->player_img->instances[0].x += BLOCK_WIDTH;
 		*x_player += 1;
+		game->moves += 1;
+		ft_printf("Moves: %d\n", game->moves);
 	}
 	if (game->map->array[*y_player][*x_player] == 'C')
 	{
-		ft_putstr_fd("You have collected one consumable.\n", 1);
+		ft_putstr_fd("Omnomnom! Lettuce, sweet!\n", 1);
 		game->map->array[*y_player][*x_player] = 'c';
 		size_t	i;
 		i = 0;
@@ -119,7 +128,7 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 		if (game->map->to_collect == 0)
 		{
 			game->map->exit_open = 1;
-			ft_putstr_fd("Everything is collected! Go to exit\n", 1);
+			ft_putstr_fd("Everything is collected, exit is open!\n", 1);
 			mlx_delete_image(game->mlx, game->images->exit_img);
 			game->images->exit_tex = mlx_load_png("./img/gate_opened_64x64.png");
 			if (!game->images->exit_tex)
@@ -138,13 +147,18 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 		free(game->map);
 		mlx_terminate(game->mlx); //got segfault
 	}
+	old_str = game->str_print;
+	game->str_print = ft_strjoin("Moves: ", ft_itoa(game->moves));
+	free(old_str);
+	mlx_put_string(game->mlx, game->str_print, 0, 0);
 }
 
 int32_t	main(int argc, char **argv)
 {
 	t_game		*game;
+	t_game		game_var;
 
-	game = (t_game*) malloc(1 * sizeof(t_game));
+	game = &game_var;
 	if (argc == 2)
 		game->map = get_map(argv[1]);
 	else
@@ -153,13 +167,14 @@ int32_t	main(int argc, char **argv)
 		ft_putstr_fd("Try run with: ./so_long map1.ber\n", 1);
 		return (1);
 	}
-	if (!(game->mlx = mlx_init(game->map->x * BLOCK_WIDTH, game->map->y * BLOCK_HEIGHT, "So long - The mystic magician", true)))
+	if (!(game->mlx = mlx_init(game->map->x * BLOCK_WIDTH, game->map->y * BLOCK_HEIGHT, "\"The lettuce is soo tasty!\" - The mystic magician", true)))
 		return (EXIT_FAILURE);
 	game->images = load_images(game->mlx);
 	ft_put_sprite(game->mlx, game->images->wall_img, game->map, '1');
 	ft_put_sprite(game->mlx, game->images->exit_img, game->map, 'E');
 	ft_put_sprite(game->mlx, game->images->consumable_img, game->map, 'C');
 	game->map->to_collect = game->images->consumable_img->count; // how many consumables to collect
+	game->moves = 0;
 	ft_put_sprite(game->mlx, game->images->player_img, game->map, 'P');
 	mlx_key_hook(game->mlx, &my_keyhook, (void*) game);
 	mlx_loop(game->mlx);

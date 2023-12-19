@@ -53,6 +53,8 @@ typedef struct	game {
 	mlx_t		*mlx;
 	t_map		*map;
 	t_images	*images;
+	size_t		moves;
+	char		*str_print;
 }			t_game;
 
 // map_check.c
@@ -62,7 +64,7 @@ t_map	*get_map(char *str);
 char	**map_to_array(int fd);
 char	**map_file_to_array(char *map_name);
 void	get_P_pos(char **map_array, t_map *map);
-void	map_flood_fill(char **map_array, int i, int j);
+void	map_flood_fill(char **map_array, size_t y, size_t x);
 
 // utils.c:
 int		ft_arrlen(char **arr);
