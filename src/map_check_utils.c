@@ -47,7 +47,7 @@ char	**map_file_to_array(char *map_name)
 	char	**map_array;
 
 	map_path = ft_strjoin("map/", map_name);
-	ft_printf("Looking for map at: %s\n", map_path); //not necessary, just info
+	ft_printf("Looking for map at: %s\n", map_path);
 	fd = open(map_path, O_RDONLY, 0444);
 	free(map_path);
 	if (fd < 0)
@@ -56,7 +56,7 @@ char	**map_file_to_array(char *map_name)
 		exit (1);
 	}
 	else
-		ft_putstr_fd("Map found!\n", 1); //not necessary, just info
+		ft_putstr_fd("Map found!\n", 1);
 	map_array = map_to_array(fd);
 	if (map_array == NULL)
 	{
@@ -81,7 +81,7 @@ void	get_P_pos(char **map_array, t_map *map)
 			{
 				map->x_player = x;
 				map->y_player = y;
-				return;
+				return ;
 			}
 			x++;
 		}
@@ -89,20 +89,20 @@ void	get_P_pos(char **map_array, t_map *map)
 	}
 }
 
-void	map_flood_fill(char **map_array, int i, int j)
+void	map_flood_fill(char **map_array, size_t y, size_t x)
 {
-	if (map_array[i][j] == 'c' || map_array[i][j] == 'e' || map_array[i][j] == 'p' || map_array[i][j] == '1' || map_array[i][j] == '2')
+	if (map_array[y][x] == 'c' || map_array[y][x] == 'e' || map_array[y][x] == 'p' || map_array[y][x] == '1' || map_array[y][x] == '2')
 		return ;
-	if (map_array[i][j] == 'C')
-		map_array[i][j] = 'c';
-	else if (map_array[i][j] == 'P')
-		map_array[i][j] = 'p';
-	else if (map_array[i][j] == 'E')
-		map_array[i][j] = 'e';
-	else if (map_array[i][j] == '0')
-		map_array[i][j] = '2';
-	map_flood_fill(map_array, i + 1, j);
-	map_flood_fill(map_array, i - 1, j);
-	map_flood_fill(map_array, i, j + 1);
-	map_flood_fill(map_array, i, j - 1);
+	if (map_array[y][x] == 'C')
+		map_array[y][x] = 'c';
+	else if (map_array[y][x] == 'P')
+		map_array[y][x] = 'p';
+	else if (map_array[y][x] == 'E')
+		map_array[y][x] = 'e';
+	else if (map_array[y][x] == '0')
+		map_array[y][x] = '2';
+	map_flood_fill(map_array, y + 1, x);
+	map_flood_fill(map_array, y - 1, x);
+	map_flood_fill(map_array, y, x + 1);
+	map_flood_fill(map_array, y, x - 1);
 }

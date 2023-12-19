@@ -154,7 +154,7 @@ void	check_closed_map(char **map_array)
  * @param str The name of the map file to be checked.
  *            Assumed to have the correct suffix (*.bek).
  * 
- * @return void
+ * @return map as an array of char*
  */
 t_map	*get_map(char *str)
 {
@@ -166,26 +166,17 @@ t_map	*get_map(char *str)
 	ft_putstr_fd("-------------------\n", 1);
 	ft_putstr_fd("-RUNNING_MAP_CHECK-\n", 1);
 	ft_putstr_fd("-------------------\n", 1);
-	// main function of map_check - return value = array of strings
-	// checking the suffix
 	check_suffix(str);
-	//getting map from file to array (also checking that the file is present in map folder)
 	map_array = map_file_to_array(str);
-	// checking the map is rectangular and has more than 3 lines
 	check_rectang_map(map_array);
-	// checking the map is closed (1 at the borders)
 	check_closed_map(map_array);
-	// get_possition of P - player
 	get_P_pos(map_array, map);
-	// duplicate the array
 	map_flooded = ft_arrdup(map_array);
-	// checking if it is possible to reach all the consumable and end from start - flood algorithm
-	map_flood_fill(map_flooded, map->x_player, map->y_player);
-	// check the number of player positions P == 1, exists == 1 and collectibles >= 1
+	map_flood_fill(map_flooded, map->y_player, map->x_player);
 	check_nof_PEC(map_array, map_flooded);
 	ft_putstr_fd("-------------------\n", 1);
 	ft_putstr_fd("---MAP_CHECK_OK----\n", 1);
-	ft_putstr_fd("-------------------\n", 1);
+	ft_putstr_fd("-------------------\n\n", 1);
 	map->array = map_array;
 	map->x = ft_strlen(map->array[0]);
 	map->y = ft_arrlen(map->array);
