@@ -28,7 +28,8 @@
 # include <stdint.h>
 # include <fcntl.h>
 
-typedef struct	map {
+typedef struct map
+{
 	char	**array;
 	size_t	x;
 	size_t	y;
@@ -38,7 +39,8 @@ typedef struct	map {
 	size_t	exit_open;
 }			t_map;
 
-typedef struct	images {
+typedef struct images
+{
 	mlx_texture_t	*exit_open_tex;
 	mlx_image_t		*exit_open_img;
 	mlx_texture_t	*exit_close_tex;
@@ -51,7 +53,8 @@ typedef struct	images {
 	mlx_image_t		*wall_img;
 }			t_images;
 
-typedef struct	game {
+typedef struct game
+{
 	mlx_t		*mlx;
 	t_map		*map;
 	t_images	*images;
@@ -70,7 +73,7 @@ typedef struct	game {
  * @note Validates that the map is rectangular.
  * @note Verifies that the map is closed (borders are present).
  * @note Ensures there is a valid path (all collectibles and exit are reachable).
- * @note Validates the correct count of exits, player start positions, and collectibles.
+ * @note Validates the correct num of collectibles, exit, player start position.
  * 
  * @param str The name of the map file to be checked.
  *            Assumed to have the correct suffix (*.bek).
