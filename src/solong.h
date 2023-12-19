@@ -57,6 +57,7 @@ typedef struct	game {
 	t_images	*images;
 	size_t		moves;
 	char		*str_print;
+	mlx_image_t	*counter_img;
 }			t_game;
 
 // map_check.c
