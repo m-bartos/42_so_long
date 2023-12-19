@@ -176,7 +176,7 @@ t_map	*get_map(char *str)
 	check_nof_PEC(map_array, map_flooded);
 	ft_putstr_fd("-------------------\n", 1);
 	ft_putstr_fd("---MAP_CHECK_OK----\n", 1);
-	ft_putstr_fd("-------------------\n", 1);
+	ft_putstr_fd("-------------------\n\n", 1);
 	map->array = map_array;
 	map->x = ft_strlen(map->array[0]);
 	map->y = ft_arrlen(map->array);
