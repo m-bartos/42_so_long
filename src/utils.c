@@ -78,7 +78,7 @@ int	count_char_in_str(char *str, char to_find)
 	return (count);
 }
 
-int	count_char_in_arr(char **array, char to_find)
+int	nof_char_in_arr(char **array, char to_find)
 {
 	int	total_count;
 

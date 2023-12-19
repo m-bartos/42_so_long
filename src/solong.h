@@ -61,6 +61,22 @@ typedef struct	game {
 }			t_game;
 
 // map_check.c
+
+/**
+ * Checks the validity of a map file.
+ * 
+ * Description:
+ * @note Checks if the map file has the correct suffix (*.bek).
+ * @note Validates that the map is rectangular.
+ * @note Verifies that the map is closed (borders are present).
+ * @note Ensures there is a valid path (all collectibles and exit are reachable).
+ * @note Validates the correct count of exits, player start positions, and collectibles.
+ * 
+ * @param str The name of the map file to be checked.
+ *            Assumed to have the correct suffix (*.bek).
+ * 
+ * @return map as an array of char*
+ */
 t_map	*get_map(char *str);
 
 // map_utils.c
@@ -74,6 +90,6 @@ int		ft_arrlen(char **arr);
 char	**ft_arrdup(char **arr);
 int		free_array(char **array);
 int		count_char_in_str(char *str, char to_find);
-int		count_char_in_arr(char **array, char to_find);
+int		nof_char_in_arr(char **array, char to_find);
 
 #endif
