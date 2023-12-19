@@ -28,7 +28,8 @@
 # include <stdint.h>
 # include <fcntl.h>
 
-typedef struct	map {
+typedef struct map
+{
 	char	**array;
 	size_t	x;
 	size_t	y;
@@ -38,7 +39,8 @@ typedef struct	map {
 	size_t	exit_open;
 }			t_map;
 
-typedef struct	images {
+typedef struct images
+{
 	mlx_texture_t	*exit_open_tex;
 	mlx_image_t		*exit_open_img;
 	mlx_texture_t	*exit_close_tex;
@@ -51,7 +53,8 @@ typedef struct	images {
 	mlx_image_t		*wall_img;
 }			t_images;
 
-typedef struct	game {
+typedef struct game
+{
 	mlx_t		*mlx;
 	t_map		*map;
 	t_images	*images;
@@ -61,19 +64,46 @@ typedef struct	game {
 }			t_game;
 
 // map_check.c
+
+/**
+ * Checks the validity of a map file.
+ * 
+ * Description:
+ * @note Checks if the map file has the correct suffix (*.bek).
+ * @note Validates that the map is rectangular.
+ * @note Verifies that the map is closed (borders are present).
+ * @note Ensures there is a valid path (all collectibles and exit are reachable).
+ * @note Validates the correct num of collectibles, exit, player start position.
+ * 
+ * @param str The name of the map file to be checked.
+ *            Assumed to have the correct suffix (*.bek).
+ * 
+ * @return map as an array of char*
+ */
 t_map	*get_map(char *str);
 
 // map_utils.c
 char	**map_to_array(int fd);
 char	**map_file_to_array(char *map_name);
-void	get_P_pos(char **map_array, t_map *map);
+void	get_player_pos(char **map_array, t_map *map);
 void	map_flood_fill(char **map_array, size_t y, size_t x);
 
 // utils.c:
+
+/**
+ * Calculates the length of a null-terminated array of strings.
+ * 
+ * @param arr Pointer to a null-terminated array of strings.
+ * 
+ * Description:
+ * - Counts the number of strings in the array until encountering a NULL pointer.
+ * 
+ * @return The number of strings in the array.
+ */
 int		ft_arrlen(char **arr);
 char	**ft_arrdup(char **arr);
 int		free_array(char **array);
 int		count_char_in_str(char *str, char to_find);
-int		count_char_in_arr(char **array, char to_find);
+int		nof_char_in_arr(char **array, char to_find);
 
 #endif

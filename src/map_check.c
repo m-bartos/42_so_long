@@ -49,7 +49,7 @@ void	check_suffix(char *str)
 		}
 		else
 		{
-			ft_putstr_fd("Error: invalid name of map file, *.bek suffix missing\n", 2);
+			ft_putstr_fd("Error: invalid map name, *.ber suffix missing\n", 2);
 			free(suf);
 			exit (1);
 		}
@@ -57,23 +57,26 @@ void	check_suffix(char *str)
 	free(suf);
 }
 
-void	check_nof_PEC(char **map_array, char **map_flooded)
+void	check_of_pec(char **map_array, char **map_flooded)
 {
-	if (count_char_in_arr(map_array, 'E') == 1 && count_char_in_arr(map_flooded, 'e'))
+	if (nof_char_in_arr(map_array, 'E') == 1
+		&& nof_char_in_arr(map_flooded, 'e'))
 		ft_putstr_fd("Correct number of exits\n", 1);
 	else
 	{
 		ft_putstr_fd("Error: Incorrect number of rechable exits!\n", 2);
 		exit(1);
 	}
-	if (count_char_in_arr(map_array, 'P') == 1 && count_char_in_arr(map_flooded, 'p'))
+	if (nof_char_in_arr(map_array, 'P') == 1
+		&& nof_char_in_arr(map_flooded, 'p'))
 		ft_putstr_fd("Correct number of starts\n", 1);
 	else
 	{
 		ft_putstr_fd("Error: Incorrect number of rechable starts!\n", 2);
 		exit(1);
 	}
-	if (count_char_in_arr(map_array, 'C') >= 1 && count_char_in_arr(map_array, 'C') == count_char_in_arr(map_flooded, 'c'))
+	if (nof_char_in_arr(map_array, 'C') >= 1
+		&& nof_char_in_arr(map_array, 'C') == nof_char_in_arr(map_flooded, 'c'))
 		ft_putstr_fd("Correct number of collectibles\n", 1);
 	else
 	{
@@ -109,60 +112,46 @@ void	check_rectang_map(char **map_array)
 
 void	check_closed_map(char **map_array)
 {
-	size_t	i;
-	size_t	j;
+	size_t	y;
+	size_t	x;
 
-	i = 0;
-	while(map_array[i])
+	y = 0;
+	while (map_array[y])
 	{
-		if(i == 0 || map_array[i + 1] == NULL)
+		if (y == 0 || map_array[y + 1] == NULL)
 		{
-			j = 0;
-			while (map_array[i][j])
+			x = 0;
+			while (map_array[y][x])
 			{
-				if (map_array[i][j] != '1')
+				if (map_array[y][x] != '1')
 				{
-					ft_putstr_fd("Error: Map is not closed with '1'.\n", 2);
+					ft_putstr_fd("Error: Map is not closed.\n", 2);
 					exit (1);
 				}
-				j++;
+				x++;
 			}
 		}
 		else
 		{
-			if (map_array[i][0] != '1' || map_array[i][ft_strlen(map_array[i]) - 1] != '1')
+			if (map_array[y][0] != '1'
+				|| map_array[y][ft_strlen(map_array[y]) - 1] != '1')
 			{
-				ft_putstr_fd("Error: Map is not closed with '1'.\n", 2);
+				ft_putstr_fd("Error: Map is not closed.\n", 2);
 				exit (1);
 			}
 		}
-		i++;
+		y++;
 	}
 	ft_putstr_fd("Map is correctly closed with '1'.\n", 1);
 }
 
-/**
- * Checks the validity of a map file.
- * 
- * Description:
- * @note Checks if the map file has the correct suffix (*.bek).
- * @note Validates that the map is rectangular.
- * @note Verifies that the map is closed (borders are present).
- * @note Ensures there is a valid path (all collectibles and exit are reachable).
- * @note Validates the correct count of exits, player start positions, and collectibles.
- * 
- * @param str The name of the map file to be checked.
- *            Assumed to have the correct suffix (*.bek).
- * 
- * @return map as an array of char*
- */
 t_map	*get_map(char *str)
 {
 	t_map	*map;
 	char	**map_array;
 	char	**map_flooded;
 
-	map = (t_map*) malloc(sizeof(t_map) * 1);
+	map = (t_map *) malloc(sizeof(t_map) * 1);
 	ft_putstr_fd("-------------------\n", 1);
 	ft_putstr_fd("-RUNNING_MAP_CHECK-\n", 1);
 	ft_putstr_fd("-------------------\n", 1);
@@ -170,10 +159,10 @@ t_map	*get_map(char *str)
 	map_array = map_file_to_array(str);
 	check_rectang_map(map_array);
 	check_closed_map(map_array);
-	get_P_pos(map_array, map);
+	get_player_pos(map_array, map);
 	map_flooded = ft_arrdup(map_array);
 	map_flood_fill(map_flooded, map->y_player, map->x_player);
-	check_nof_PEC(map_array, map_flooded);
+	check_of_pec(map_array, map_flooded);
 	ft_putstr_fd("-------------------\n", 1);
 	ft_putstr_fd("---MAP_CHECK_OK----\n", 1);
 	ft_putstr_fd("-------------------\n\n", 1);

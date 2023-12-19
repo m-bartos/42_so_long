@@ -12,22 +12,12 @@
 
 #include "solong.h"
 
-/**
- * Calculates the length of a null-terminated array of strings.
- * 
- * @param arr Pointer to a null-terminated array of strings.
- * 
- * Description:
- * - Counts the number of strings in the array until encountering a NULL pointer.
- * 
- * @return The number of strings in the array.
- */
 int	ft_arrlen(char **arr)
 {
 	int	len;
 
 	len = 0;
-	while(*arr++)
+	while (*arr++)
 		len++;
 	return (len);
 }
@@ -37,7 +27,7 @@ char	**ft_arrdup(char **arr)
 	size_t	i;
 	char	**new_arr;
 
-	new_arr = (char **) malloc((ft_arrlen(arr) + 1) * sizeof(char*));
+	new_arr = (char **) malloc((ft_arrlen(arr) + 1) * sizeof(char *));
 	if (new_arr == NULL)
 		return (NULL);
 	i = 0;
@@ -78,12 +68,12 @@ int	count_char_in_str(char *str, char to_find)
 	return (count);
 }
 
-int	count_char_in_arr(char **array, char to_find)
+int	nof_char_in_arr(char **array, char to_find)
 {
 	int	total_count;
 
 	total_count = 0;
 	while (*array)
 		total_count = total_count + count_char_in_str(*array++, to_find);
-	return(total_count);
+	return (total_count);
 }

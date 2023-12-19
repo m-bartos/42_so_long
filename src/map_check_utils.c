@@ -29,7 +29,7 @@ char	**map_to_array(int fd)
 	{
 		one_line = get_next_line(fd);
 		if (one_line == NULL)
-			break;
+			break ;
 		old_lines = lines;
 		lines = ft_strjoin(old_lines, one_line);
 		free(old_lines);
@@ -52,7 +52,7 @@ char	**map_file_to_array(char *map_name)
 	free(map_path);
 	if (fd < 0)
 	{
-		ft_putstr_fd("Error: Map not found. It has to be located in map folder.\n", 2);
+		ft_putstr_fd("Error: Map not found. It has to be in map folder.\n", 2);
 		exit (1);
 	}
 	else
@@ -66,7 +66,7 @@ char	**map_file_to_array(char *map_name)
 	return (map_array);
 }
 
-void	get_P_pos(char **map_array, t_map *map)
+void	get_player_pos(char **map_array, t_map *map)
 {
 	size_t	y;
 	size_t	x;
@@ -75,7 +75,7 @@ void	get_P_pos(char **map_array, t_map *map)
 	while (map_array[y])
 	{
 		x = 0;
-		while(map_array[y][x])
+		while (map_array[y][x])
 		{
 			if (map_array[y][x] == 'P')
 			{
@@ -91,7 +91,9 @@ void	get_P_pos(char **map_array, t_map *map)
 
 void	map_flood_fill(char **map_array, size_t y, size_t x)
 {
-	if (map_array[y][x] == 'c' || map_array[y][x] == 'e' || map_array[y][x] == 'p' || map_array[y][x] == '1' || map_array[y][x] == '2')
+	if (map_array[y][x] == 'c' || map_array[y][x] == 'e'
+		|| map_array[y][x] == 'p' || map_array[y][x] == '1'
+		|| map_array[y][x] == '2')
 		return ;
 	if (map_array[y][x] == 'C')
 		map_array[y][x] = 'c';
