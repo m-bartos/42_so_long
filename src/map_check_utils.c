@@ -47,7 +47,7 @@ char	**map_file_to_array(char *map_name)
 	char	**map_array;
 
 	map_path = ft_strjoin("map/", map_name);
-	ft_printf("Looking for map at: %s\n", map_path); //not necessary, just info
+	ft_printf("Looking for map at: %s\n", map_path);
 	fd = open(map_path, O_RDONLY, 0444);
 	free(map_path);
 	if (fd < 0)
@@ -56,7 +56,7 @@ char	**map_file_to_array(char *map_name)
 		exit (1);
 	}
 	else
-		ft_putstr_fd("Map found!\n", 1); //not necessary, just info
+		ft_putstr_fd("Map found!\n", 1);
 	map_array = map_to_array(fd);
 	if (map_array == NULL)
 	{
@@ -81,7 +81,7 @@ void	get_P_pos(char **map_array, t_map *map)
 			{
 				map->x_player = x;
 				map->y_player = y;
-				return;
+				return ;
 			}
 			x++;
 		}
