@@ -39,8 +39,10 @@ typedef struct	map {
 }			t_map;
 
 typedef struct	images {
-	mlx_texture_t	*exit_tex;
-	mlx_image_t		*exit_img;
+	mlx_texture_t	*exit_open_tex;
+	mlx_image_t		*exit_open_img;
+	mlx_texture_t	*exit_close_tex;
+	mlx_image_t		*exit_close_img;
 	mlx_texture_t	*consumable_tex;
 	mlx_image_t		*consumable_img;
 	mlx_texture_t	*player_tex;

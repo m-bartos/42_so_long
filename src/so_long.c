@@ -22,6 +22,7 @@ t_images	*load_images(mlx_t *mlx)
 {
 	t_images	*images;
 
+
 	images = (t_images *) malloc(1 * sizeof(t_images));
 	if (!images)
 		error();
@@ -43,12 +44,23 @@ t_images	*load_images(mlx_t *mlx)
 	images->consumable_img = mlx_texture_to_image(mlx, images->consumable_tex);
 	if (!images->consumable_img)
 		error();
-	images->exit_tex = mlx_load_png("./img/gate_closed_64x64.png");
-	if (!images->exit_tex)
+	images->exit_close_tex = mlx_load_png("./img/gate_closed_64x64.png");
+	if (!images->exit_close_tex)
 		error();
-	images->exit_img = mlx_texture_to_image(mlx, images->exit_tex);
-	if (!images->exit_img)
+	images->exit_close_img = mlx_texture_to_image(mlx, images->exit_close_tex);
+	if (!images->exit_close_img)
 		error();
+	images->exit_open_tex = mlx_load_png("./img/gate_opened_64x64.png");
+	if (!images->exit_open_tex)
+		error();
+	images->exit_open_img = mlx_texture_to_image(mlx, images->exit_open_tex);
+	if (!images->exit_open_img)
+		error();
+	mlx_delete_texture(images->player_tex);
+	mlx_delete_texture(images->wall_tex);
+	mlx_delete_texture(images->consumable_tex);
+	mlx_delete_texture(images->exit_open_tex);
+	mlx_delete_texture(images->exit_close_tex);
 	return (images);
 }
 
@@ -80,6 +92,7 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 	size_t	*x_player;
 	size_t	*y_player;
 	char	*old_str;
+	char	*str_moves;
 
 	game = (t_game*) param;
 	x_player = &game->map->x_player;
@@ -129,27 +142,25 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 		{
 			game->map->exit_open = 1;
 			ft_putstr_fd("Everything is collected, exit is open!\n", 1);
-			mlx_delete_image(game->mlx, game->images->exit_img);
-			game->images->exit_tex = mlx_load_png("./img/gate_opened_64x64.png");
-			if (!game->images->exit_tex)
-				error();
-			game->images->exit_img = mlx_texture_to_image(game->mlx, game->images->exit_tex);
-			if (!game->images->exit_img)
-				error();
-			ft_put_sprite(game->mlx, game->images->exit_img, game->map, 'E');
+			game->images->exit_close_img[0].enabled = 0;
+			game->images->exit_open_img[0].enabled = 1;
 		}
 	}
 	if (game->map->exit_open == 1 && game->map->array[*y_player][*x_player] == 'E')
 	{
 		game->map->array[*y_player][*x_player] = 'e';
 		ft_putstr_fd("You won!\n", 1);
-		free_array(game->map->array); //freeing needs to be better
-		free(game->map);
-		mlx_terminate(game->mlx); //got segfault
+		mlx_terminate(game->mlx); 
+		free_array(game->map->array);
+		free(game->str_print);
+		free(game->images);
+		exit(0);
 	}
 	old_str = game->str_print;
-	game->str_print = ft_strjoin("Moves: ", ft_itoa(game->moves));
+	str_moves = ft_itoa(game->moves);
+	game->str_print = ft_strjoin("Moves: ", str_moves);
 	free(old_str);
+	free(str_moves);
 	mlx_put_string(game->mlx, game->str_print, 0, 0);
 }
 
@@ -167,17 +178,23 @@ int32_t	main(int argc, char **argv)
 		ft_putstr_fd("Try run with: ./so_long map1.ber\n", 1);
 		return (1);
 	}
-	if (!(game->mlx = mlx_init(game->map->x * BLOCK_WIDTH, game->map->y * BLOCK_HEIGHT, "\"The lettuce is soo tasty!\" - The mystic magician", true)))
+	if (!(game->mlx = mlx_init(game->map->x * BLOCK_WIDTH, game->map->y * BLOCK_HEIGHT, "\"The lettuce is soo tasty!\" - The mystic magician", false)))
 		return (EXIT_FAILURE);
+	ft_printf("try1\n");
 	game->images = load_images(game->mlx);
+	ft_printf("try2\n");
+	ft_printf("%d, %d\n", game->map->x, game->map->y);
 	ft_put_sprite(game->mlx, game->images->wall_img, game->map, '1');
-	ft_put_sprite(game->mlx, game->images->exit_img, game->map, 'E');
+	ft_put_sprite(game->mlx, game->images->exit_open_img, game->map, 'E');
+	ft_put_sprite(game->mlx, game->images->exit_close_img, game->map, 'E');
 	ft_put_sprite(game->mlx, game->images->consumable_img, game->map, 'C');
+	// better to put it in some init function?
+	game->images->exit_open_img[0].enabled = 0;
 	game->map->to_collect = game->images->consumable_img->count; // how many consumables to collect
 	game->moves = 0;
+	game->str_print = NULL;
 	ft_put_sprite(game->mlx, game->images->player_img, game->map, 'P');
 	mlx_key_hook(game->mlx, &my_keyhook, (void*) game);
 	mlx_loop(game->mlx);
-	mlx_terminate(game->mlx);
 	return (EXIT_SUCCESS);
 }
