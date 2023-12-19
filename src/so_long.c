@@ -12,55 +12,35 @@
 
 #include "solong.h"
 
-static void error(void)
+static void	error(void)
 {
 	ft_putstr_fd((char *) mlx_strerror(mlx_errno), 2);
 	exit(EXIT_FAILURE);
+}
+
+void	load_img_and_tex(char * path, mlx_t *mlx, mlx_texture_t **tex, mlx_image_t **img)
+{
+	*tex = mlx_load_png(path);
+	if (!*tex)
+		error();
+	*img = mlx_texture_to_image(mlx, *tex);
+	if (!*img)
+		error();
+	mlx_delete_texture(*tex);
 }
 
 t_images	*load_images(mlx_t *mlx)
 {
 	t_images	*images;
 
-
 	images = (t_images *) malloc(1 * sizeof(t_images));
 	if (!images)
 		error();
-	images->player_tex = mlx_load_png("./img/Wizard_Man_64x64.png");
-	if (!images->player_tex)
-		error();
-	images->player_img = mlx_texture_to_image(mlx, images->player_tex);
-	if (!images->player_img)
-		error();
-	images->wall_tex = mlx_load_png("./img/Wall_64x64.png");
-	if (!images->wall_tex)
-		error();
-	images->wall_img = mlx_texture_to_image(mlx, images->wall_tex);
-	if (!images->wall_img)
-		error();
-	images->consumable_tex = mlx_load_png("./img/Consumable_64x64.png");
-	if (!images->consumable_tex)
-		error();
-	images->consumable_img = mlx_texture_to_image(mlx, images->consumable_tex);
-	if (!images->consumable_img)
-		error();
-	images->exit_close_tex = mlx_load_png("./img/gate_closed_64x64.png");
-	if (!images->exit_close_tex)
-		error();
-	images->exit_close_img = mlx_texture_to_image(mlx, images->exit_close_tex);
-	if (!images->exit_close_img)
-		error();
-	images->exit_open_tex = mlx_load_png("./img/gate_opened_64x64.png");
-	if (!images->exit_open_tex)
-		error();
-	images->exit_open_img = mlx_texture_to_image(mlx, images->exit_open_tex);
-	if (!images->exit_open_img)
-		error();
-	mlx_delete_texture(images->player_tex);
-	mlx_delete_texture(images->wall_tex);
-	mlx_delete_texture(images->consumable_tex);
-	mlx_delete_texture(images->exit_open_tex);
-	mlx_delete_texture(images->exit_close_tex);
+	load_img_and_tex("./img/Wizard_Man_64x64.png", mlx, &images->player_tex, &images->player_img);
+	load_img_and_tex("./img/Wall_64x64.png", mlx, &images->wall_tex, &images->wall_img);
+	load_img_and_tex("./img/Consumable_64x64.png", mlx, &images->consumable_tex, &images->consumable_img);
+	load_img_and_tex("./img/gate_closed_64x64.png", mlx, &images->exit_close_tex, &images->exit_close_img);
+	load_img_and_tex("./img/gate_opened_64x64.png", mlx, &images->exit_open_tex, &images->exit_open_img);
 	return (images);
 }
 
