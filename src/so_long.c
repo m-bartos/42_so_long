@@ -18,7 +18,7 @@ static void	error(void)
 	exit(EXIT_FAILURE);
 }
 
-void	load_img_and_tex(char * path, mlx_t *mlx, mlx_texture_t **tex, mlx_image_t **img)
+void	load_img_and_tex(char *path, mlx_t *mlx, mlx_texture_t **tex, mlx_image_t **img)
 {
 	*tex = mlx_load_png(path);
 	if (!*tex)
@@ -66,15 +66,15 @@ void	ft_put_sprite(mlx_t *mlx, mlx_image_t *img, t_map *map, char symbol)
 	}
 }
 
-void my_keyhook(mlx_key_data_t keydata, void* param)
+void	my_keyhook(mlx_key_data_t keydata, void *param)
 {
-	t_game *game;
+	t_game	*game;
 	size_t	*x_player;
 	size_t	*y_player;
 	char	*old_str;
 	char	*str_moves;
 
-	game = (t_game*) param;
+	game = (t_game *) param;
 	x_player = &game->map->x_player;
 	y_player = &game->map->y_player;
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
@@ -119,11 +119,11 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 	{
 		ft_putstr_fd("Omnomnom! Lettuce, sweet!\n", 1);
 		game->map->array[*y_player][*x_player] = 'c';
-		size_t	i;
+		size_t	i; //problem
 		i = 0;
 		while (i < game->images->consumable_img->count)
 		{
-			if ((size_t) game->images->consumable_img->instances[i].x/BLOCK_WIDTH == *x_player && (size_t) game->images->consumable_img->instances[i].y/BLOCK_HEIGHT == *y_player)
+			if ((size_t) game->images->consumable_img->instances[i].x / BLOCK_WIDTH == *x_player && (size_t) game->images->consumable_img->instances[i].y / BLOCK_HEIGHT == *y_player)
 				game->images->consumable_img->instances[i].enabled = 0;
 			i++;
 		}
@@ -141,7 +141,7 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 		game->map->array[*y_player][*x_player] = 'e';
 		ft_printf("|| You won! ||\n|| Final number of moves: %d ||\n", game->moves);
 		mlx_close_window(game->mlx);
-		mlx_terminate(game->mlx); 
+		mlx_terminate(game->mlx);
 		free_array(game->map->array);
 		free(game->str_print);
 		free(game->images);
@@ -171,7 +171,8 @@ int32_t	main(int argc, char **argv)
 		ft_putstr_fd("Try run with: ./so_long map1.ber\n", 1);
 		return (1);
 	}
-	if (!(game->mlx = mlx_init(game->map->x * BLOCK_WIDTH, game->map->y * BLOCK_HEIGHT, "\"The lettuce is soo tasty!\" - The mystic magician", false)))
+	game->mlx = mlx_init(game->map->x * BLOCK_WIDTH, game->map->y * BLOCK_HEIGHT, "\"The lettuce is soo tasty!\" - The mystic magician", false);
+	if (!game->mlx)
 		return (EXIT_FAILURE);
 	game->images = load_images(game->mlx);
 	ft_put_sprite(game->mlx, game->images->wall_img, game->map, '1');
@@ -185,7 +186,7 @@ int32_t	main(int argc, char **argv)
 	game->str_print = ft_strjoin("Moves: ", "0");
 	game->counter_img = mlx_put_string(game->mlx, game->str_print, 0, 0);
 	ft_put_sprite(game->mlx, game->images->player_img, game->map, 'P');
-	mlx_key_hook(game->mlx, &my_keyhook, (void*) game);
+	mlx_key_hook(game->mlx, &my_keyhook, (void *) game);
 	mlx_loop(game->mlx);
 	return (EXIT_SUCCESS);
 }
