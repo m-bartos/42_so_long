@@ -51,6 +51,8 @@ typedef struct images
 	mlx_image_t		*player_img;
 	mlx_texture_t	*wall_tex;
 	mlx_image_t		*wall_img;
+	mlx_texture_t	*enemy_tex;
+	mlx_image_t		*enemy_img;
 }			t_images;
 
 typedef struct game
