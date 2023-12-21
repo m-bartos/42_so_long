@@ -13,8 +13,8 @@
 #ifndef SOLONG_H
 # define SOLONG_H
 
-# define BLOCK_WIDTH 64
-# define BLOCK_HEIGHT 64
+# define BLOCK_W 64
+# define BLOCK_H 64
 
 # include "../lib/MLX42/include/MLX42/MLX42.h"
 # include "../lib/libft/libft.h"
