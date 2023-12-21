@@ -93,7 +93,7 @@ void	map_flood_fill(char **map_array, size_t y, size_t x)
 {
 	if (map_array[y][x] == 'c' || map_array[y][x] == 'e'
 		|| map_array[y][x] == 'p' || map_array[y][x] == '1'
-		|| map_array[y][x] == '2')
+		|| map_array[y][x] == '2' || map_array[y][x] == 'B')
 		return ;
 	if (map_array[y][x] == 'C')
 		map_array[y][x] = 'c';

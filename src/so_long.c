@@ -18,7 +18,19 @@ static void	error(void)
 	exit(EXIT_FAILURE);
 }
 
-void	load_img_and_tex(char *path, mlx_t *mlx, mlx_texture_t **tex, mlx_image_t **img)
+void	error_argc(int argc)
+{
+	if (argc != 2)
+	{
+		ft_putstr_fd("Error: Expecting 2 arg.\n", 2);
+		ft_putstr_fd("Format: ./so_long MAP_NAME.ber\n", 1);
+		ft_putstr_fd("Map has to be located in map folder.\n", 1);
+		ft_putstr_fd("Try run with: ./so_long map1.ber\n", 1);
+		exit(1);
+	}
+}
+
+void	img_and_tex(char *path, mlx_t *mlx, mlx_texture_t **tex, mlx_image_t **img)
 {
 	*tex = mlx_load_png(path);
 	if (!*tex)
@@ -36,11 +48,12 @@ t_images	*load_images(mlx_t *mlx)
 	images = (t_images *) malloc(1 * sizeof(t_images));
 	if (!images)
 		error();
-	load_img_and_tex("./img/Wizard_Man_64x64.png", mlx, &images->player_tex, &images->player_img);
-	load_img_and_tex("./img/Wall_64x64.png", mlx, &images->wall_tex, &images->wall_img);
-	load_img_and_tex("./img/Consumable_64x64.png", mlx, &images->consumable_tex, &images->consumable_img);
-	load_img_and_tex("./img/gate_closed_64x64.png", mlx, &images->exit_close_tex, &images->exit_close_img);
-	load_img_and_tex("./img/gate_opened_64x64.png", mlx, &images->exit_open_tex, &images->exit_open_img);
+	img_and_tex("./img/Wizard_Man_64x64.png", mlx, &images->player_tex, &images->player_img);
+	img_and_tex("./img/Wall_64x64.png", mlx, &images->wall_tex, &images->wall_img);
+	img_and_tex("./img/Consumable_64x64.png", mlx, &images->consumable_tex, &images->consumable_img);
+	img_and_tex("./img/gate_closed_64x64.png", mlx, &images->exit_close_tex, &images->exit_close_img);
+	img_and_tex("./img/gate_opened_64x64.png", mlx, &images->exit_open_tex, &images->exit_open_img);
+	img_and_tex("./img/skull_64x64-3.png", mlx, &images->enemy_tex, &images->enemy_img);
 	return (images);
 }
 
@@ -66,65 +79,23 @@ void	ft_put_sprite(mlx_t *mlx, mlx_image_t *img, t_map *map, char symbol)
 	}
 }
 
-void	my_keyhook(mlx_key_data_t keydata, void *param)
+void	is_consumable(t_game *game, size_t y_player, size_t x_player)
 {
-	t_game	*game;
-	size_t	*x_player;
-	size_t	*y_player;
-	char	*old_str;
-	char	*str_moves;
+	size_t	i;
 
-	game = (t_game *) param;
-	x_player = &game->map->x_player;
-	y_player = &game->map->y_player;
-	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
+	i = 0;
+	if (game->map->array[y_player][x_player] == 'C')
 	{
-		mlx_close_window(game->mlx);
-		mlx_terminate(game->mlx);
-		free_array(game->map->array);
-		free(game->str_print);
-		free(game->images);
-		ft_printf("|| You have left the game ||\n");
-		exit(0);
-	}
-	if (keydata.key == MLX_KEY_W && keydata.action == MLX_PRESS && *y_player > 1 && (game->map->array[*y_player - 1][*x_player] != '1'))
-	{
-		game->images->player_img->instances[0].y -= BLOCK_WIDTH;
-		*y_player -= 1;
-		game->moves += 1;
-		ft_printf("Moves: %d\n", game->moves);
-	}
-	if (keydata.key == MLX_KEY_A && keydata.action == MLX_PRESS && *x_player > 1 && (game->map->array[*y_player][*x_player - 1] != '1'))
-	{
-		game->images->player_img->instances[0].x -= BLOCK_WIDTH;
-		*x_player -= 1;
-		game->moves += 1;
-		ft_printf("Moves: %d\n", game->moves);
-	}
-	if (keydata.key == MLX_KEY_S && keydata.action == MLX_PRESS && (*y_player < (game->map->y - 2)) && (game->map->array[*y_player + 1][*x_player] != '1'))
-	{
-		game->images->player_img->instances[0].y += BLOCK_WIDTH;
-		*y_player += 1;
-		game->moves += 1;
-		ft_printf("Moves: %d\n", game->moves);
-	}
-	if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS && *x_player < (game->map->x - 2) && (game->map->array[*y_player][*x_player + 1] != '1'))
-	{
-		game->images->player_img->instances[0].x += BLOCK_WIDTH;
-		*x_player += 1;
-		game->moves += 1;
-		ft_printf("Moves: %d\n", game->moves);
-	}
-	if (game->map->array[*y_player][*x_player] == 'C')
-	{
-		ft_putstr_fd("Omnomnom! Lettuce, sweet!\n", 1);
-		game->map->array[*y_player][*x_player] = 'c';
-		size_t	i; //problem
-		i = 0;
+		game->map->array[y_player][x_player] = 'c';
+
 		while (i < game->images->consumable_img->count)
 		{
-			if ((size_t) game->images->consumable_img->instances[i].x / BLOCK_WIDTH == *x_player && (size_t) game->images->consumable_img->instances[i].y / BLOCK_HEIGHT == *y_player)
+			if ((size_t) game->images->consumable_img->instances[i].x / BLOCK_WIDTH == x_player
+			&& (size_t) game->images->consumable_img->instances[i].y / BLOCK_HEIGHT == y_player)
+			{
 				game->images->consumable_img->instances[i].enabled = 0;
+				break ;
+			}
 			i++;
 		}
 		game->map->to_collect -= 1;
@@ -136,9 +107,27 @@ void	my_keyhook(mlx_key_data_t keydata, void *param)
 			game->images->exit_open_img[0].enabled = 1;
 		}
 	}
-	if (game->map->exit_open == 1 && game->map->array[*y_player][*x_player] == 'E')
+	return ;
+}
+
+void	is_enemy(t_game *game, size_t y_player, size_t x_player)
+{
+	if (game->map->array[y_player][x_player] == 'B')
 	{
-		game->map->array[*y_player][*x_player] = 'e';
+		ft_putstr_fd("||  GAME OVER   ||\n|| YOU ARE DEAD ||\n", 1);
+		mlx_close_window(game->mlx);
+		mlx_terminate(game->mlx);
+		free_array(game->map->array);
+		free(game->str_print);
+		free(game->images);
+		exit(0);
+	}
+}
+
+void	is_exit(t_game *game, size_t y_player, size_t x_player)
+{
+	if (game->map->exit_open == 1 && game->map->array[y_player][x_player] == 'E')
+	{
 		ft_printf("|| You won! ||\n|| Final number of moves: %d ||\n", game->moves);
 		mlx_close_window(game->mlx);
 		mlx_terminate(game->mlx);
@@ -147,6 +136,13 @@ void	my_keyhook(mlx_key_data_t keydata, void *param)
 		free(game->images);
 		exit(0);
 	}
+}
+
+void	put_score(t_game *game)
+{
+	char	*old_str;
+	char	*str_moves;
+
 	old_str = game->str_print;
 	str_moves = ft_itoa(game->moves);
 	game->str_print = ft_strjoin("Moves: ", str_moves);
@@ -156,21 +152,90 @@ void	my_keyhook(mlx_key_data_t keydata, void *param)
 	game->counter_img = mlx_put_string(game->mlx, game->str_print, 0, 0);
 }
 
+void	is_ESC_pressed(mlx_key_data_t keydata, t_game *game)
+{
+	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
+	{
+		mlx_close_window(game->mlx);
+		mlx_terminate(game->mlx);
+		free_array(game->map->array);
+		free(game->str_print);
+		free(game->images);
+		ft_printf("|| You have left the game ||\n");
+		exit(0);
+	}
+}
+
+void is_WSAD_pressed(mlx_key_data_t keydata, t_game *game, size_t *y_player, size_t *x_player)
+{
+	if (keydata.key == MLX_KEY_W && keydata.action == MLX_PRESS 
+		&& *y_player > 1
+		&& (game->map->array[*y_player - 1][*x_player] != '1'))
+	{
+		game->images->player_img->instances[0].y -= BLOCK_WIDTH;
+		*y_player -= 1;
+	}
+	else if (keydata.key == MLX_KEY_A && keydata.action == MLX_PRESS
+		&& *x_player > 1
+		&& (game->map->array[*y_player][*x_player - 1] != '1'))
+	{
+		game->images->player_img->instances[0].x -= BLOCK_WIDTH;
+		*x_player -= 1;
+	}
+	else if (keydata.key == MLX_KEY_S && keydata.action == MLX_PRESS
+		&& (*y_player < (game->map->y - 2))
+		&& (game->map->array[*y_player + 1][*x_player] != '1'))
+	{
+		game->images->player_img->instances[0].y += BLOCK_WIDTH;
+		*y_player += 1;
+	}
+	else if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS
+		&& *x_player < (game->map->x - 2)
+		&& (game->map->array[*y_player][*x_player + 1] != '1'))
+	{
+		game->images->player_img->instances[0].x += BLOCK_WIDTH;
+		*x_player += 1;
+	}
+	else
+		return ;
+	game->moves += 1;
+	ft_printf("Moves: %d\n", game->moves);
+}
+
+void	keyhook(mlx_key_data_t keydata, void *param)
+{
+	t_game	*game;
+	size_t	*x_player;
+	size_t	*y_player;
+
+	game = (t_game *) param;
+	x_player = &game->map->x_player;
+	y_player = &game->map->y_player;
+	is_ESC_pressed(keydata, game);
+	is_WSAD_pressed(keydata, game, y_player, x_player);
+	is_consumable(game, *y_player, *x_player);
+	is_enemy(game, *y_player, *x_player);
+	is_exit(game, *y_player, *x_player);
+	put_score(game);
+}
+
+void	game_init(t_game *game)
+{
+	game->images->exit_open_img[0].enabled = 0;
+	game->map->to_collect = game->images->consumable_img->count;
+	game->moves = 0;
+	game->str_print = ft_strjoin("Moves: ", "0");
+	game->counter_img = mlx_put_string(game->mlx, game->str_print, 0, 0);
+}
+
 int32_t	main(int argc, char **argv)
 {
 	t_game		*game;
 	t_game		game_var;
 
 	game = &game_var;
-	if (argc == 2)
-		game->map = get_map(argv[1]);
-	else
-	{
-		ft_putstr_fd("Error: Two arguments needed. Format: ./so_long MAP_NAME.ber\n", 2);
-		ft_putstr_fd("Map has to be located in map folder.\n", 1);
-		ft_putstr_fd("Try run with: ./so_long map1.ber\n", 1);
-		return (1);
-	}
+	error_argc(argc);
+	game->map = get_map(argv[1]);
 	game->mlx = mlx_init(game->map->x * BLOCK_WIDTH, game->map->y * BLOCK_HEIGHT, "\"The lettuce is soo tasty!\" - The mystic magician", false);
 	if (!game->mlx)
 		return (EXIT_FAILURE);
@@ -179,14 +244,10 @@ int32_t	main(int argc, char **argv)
 	ft_put_sprite(game->mlx, game->images->exit_open_img, game->map, 'E');
 	ft_put_sprite(game->mlx, game->images->exit_close_img, game->map, 'E');
 	ft_put_sprite(game->mlx, game->images->consumable_img, game->map, 'C');
-	// better to put it in some init function?
-	game->images->exit_open_img[0].enabled = 0;
-	game->map->to_collect = game->images->consumable_img->count; // how many consumables to collect
-	game->moves = 0;
-	game->str_print = ft_strjoin("Moves: ", "0");
-	game->counter_img = mlx_put_string(game->mlx, game->str_print, 0, 0);
+	ft_put_sprite(game->mlx, game->images->enemy_img, game->map, 'B');
 	ft_put_sprite(game->mlx, game->images->player_img, game->map, 'P');
-	mlx_key_hook(game->mlx, &my_keyhook, (void *) game);
+	game_init(game);
+	mlx_key_hook(game->mlx, &keyhook, (void *) game);
 	mlx_loop(game->mlx);
 	return (EXIT_SUCCESS);
 }
