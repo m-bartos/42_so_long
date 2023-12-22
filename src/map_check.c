@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 12:34:42 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/13 15:55:11 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/12/22 11:03:03 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,10 +124,7 @@ void	check_closed_map(char **map_array)
 			while (map_array[y][x])
 			{
 				if (map_array[y][x] != '1')
-				{
-					ft_putstr_fd("Error: Map is not closed.\n", 2);
-					exit (1);
-				}
+					error_map_open();
 				x++;
 			}
 		}
@@ -135,10 +132,7 @@ void	check_closed_map(char **map_array)
 		{
 			if (map_array[y][0] != '1'
 				|| map_array[y][ft_strlen(map_array[y]) - 1] != '1')
-			{
-				ft_putstr_fd("Error: Map is not closed.\n", 2);
-				exit (1);
-			}
+				error_map_open();
 		}
 		y++;
 	}

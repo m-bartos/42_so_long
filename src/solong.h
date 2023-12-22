@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:27:47 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 01:20:13 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/12/22 11:03:30 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,6 @@
 
 # include "../lib/MLX42/include/MLX42/MLX42.h"
 # include "../lib/libft/libft.h"
-//# include <sys/wait.h>
-//# include <X11/X.h>
-//# include <X11/keysym.h>
 # include <stddef.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -68,6 +65,7 @@ typedef struct game
 // errors.c
 void		error(void);
 void		error_argc(int argc);
+void		error_map_open(void);
 
 // hook_utils.c
 void		is_consumable(t_game *game, size_t y_player, size_t x_player);
