@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 01:16:23 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 11:38:03 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/12/22 11:44:16 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,62 +67,5 @@ void	is_exit(t_game *game, size_t y_player, size_t x_player)
 		free(game->str_print);
 		free(game->images);
 		exit(0);
-	}
-}
-
-void	is_esc_pressed(mlx_key_data_t keydata, t_game *game)
-{
-	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
-	{
-		mlx_close_window(game->mlx);
-		mlx_terminate(game->mlx);
-		free_array(game->map->array);
-		free(game->str_print);
-		free(game->images);
-		ft_printf("|| You have left the game ||\n");
-		exit(0);
-	}
-}
-
-void	move_player_x(t_game *game, size_t *x_player, int x)
-{
-	game->images->player_img->instances[0].x += x * BLOCK_W;
-	*x_player += x;
-	game->moves += 1;
-	ft_printf("Moves: %d\n", game->moves);
-}
-
-void	move_player_y(t_game *game, size_t *y_player, int y)
-{
-	game->images->player_img->instances[0].y += y * BLOCK_W;
-	*y_player += y;
-	game->moves += 1;
-	ft_printf("Moves: %d\n", game->moves);
-}
-
-void	is_wsad_pressed(mlx_key_data_t keydata, t_game *game,
-						size_t *y_player, size_t *x_player)
-{
-	if (keydata.key == MLX_KEY_W && keydata.action == MLX_PRESS
-		&& *y_player > 1 && (game->map->array[*y_player - 1][*x_player] != '1'))
-	{
-		move_player_y(game, y_player, -1);
-	}
-	else if (keydata.key == MLX_KEY_A && keydata.action == MLX_PRESS
-		&& *x_player > 1 && (game->map->array[*y_player][*x_player - 1] != '1'))
-	{
-		move_player_x(game, x_player, -1);
-	}
-	else if (keydata.key == MLX_KEY_S && keydata.action == MLX_PRESS
-		&& (*y_player < (game->map->y - 2))
-		&& (game->map->array[*y_player + 1][*x_player] != '1'))
-	{
-		move_player_y(game, y_player, +1);
-	}
-	else if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS
-		&& *x_player < (game->map->x - 2)
-		&& (game->map->array[*y_player][*x_player + 1] != '1'))
-	{
-		move_player_x(game, x_player, +1);
 	}
 }

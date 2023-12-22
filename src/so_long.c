@@ -6,28 +6,11 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:10:44 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 11:40:30 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/12/22 11:43:19 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "solong.h"
-
-void	keyhook(mlx_key_data_t keydata, void *param)
-{
-	t_game	*game;
-	size_t	*x_player;
-	size_t	*y_player;
-
-	game = (t_game *) param;
-	x_player = &game->map->x_player;
-	y_player = &game->map->y_player;
-	is_esc_pressed(keydata, game);
-	is_wsad_pressed(keydata, game, y_player, x_player);
-	is_consumable(game, *y_player, *x_player);
-	is_enemy(game, *y_player, *x_player);
-	is_exit(game, *y_player, *x_player);
-	put_score(game);
-}
 
 void	game_init(t_game *game)
 {

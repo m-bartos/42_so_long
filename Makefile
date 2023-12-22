@@ -6,7 +6,7 @@
 #    By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/21 10:59:06 by mbartos           #+#    #+#              #
-#    Updated: 2023/12/22 01:19:15 by mbartos          ###   ########.fr        #
+#    Updated: 2023/12/22 11:46:00 by mbartos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ INC_LIBFT =		-I ./libft
 
 #sources
 SRC_PATH =	src/
-SRC = 	errors.c hook_utils.c images.c so_long.c map_check.c map_check_utils.c utils.c
+SRC = 	errors.c hook_utils.c hook.c images.c so_long.c map_check.c map_check_utils.c utils.c
 SRCS =	$(addprefix $(SRC_PATH), $(SRC))
 
 #objects

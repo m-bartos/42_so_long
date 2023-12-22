@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:27:47 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 11:20:41 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/12/22 11:45:43 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,14 @@ void		error_map_open(void);
 void		is_consumable(t_game *game, size_t y_player, size_t x_player);
 void		is_enemy(t_game *game, size_t y_player, size_t x_player);
 void		is_exit(t_game *game, size_t y_player, size_t x_player);
+
+// hook.c
 void		is_esc_pressed(mlx_key_data_t keydata, t_game *game);
+void		move_player_x(t_game *game, size_t *x_player, int x);
+void		move_player_y(t_game *game, size_t *y_player, int y);
 void		is_wsad_pressed(mlx_key_data_t keydata, t_game *game,
 				size_t *y_player, size_t *x_player);
+void		keyhook(mlx_key_data_t keydata, void *param);
 
 // images.c
 void		img_and_tex(char *path, mlx_t *mlx,
