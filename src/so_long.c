@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:10:44 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 01:17:21 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/12/22 11:16:23 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ void	keyhook(mlx_key_data_t keydata, void *param)
 
 void	game_init(t_game *game)
 {
-	game->images->exit_open_img[0].enabled = 0;
-	game->map->to_collect = game->images->consumable_img->count;
+	game->images->ex_opn_img[0].enabled = 0;
+	game->map->to_collect = game->images->consum_img->count;
 	game->moves = 0;
 	game->str_print = ft_strjoin("Moves: ", "0");
 	game->counter_img = mlx_put_string(game->mlx, game->str_print, 0, 0);
@@ -69,9 +69,9 @@ int32_t	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	game->images = load_images(game->mlx);
 	ft_put_sprite(game->mlx, game->images->wall_img, game->map, '1');
-	ft_put_sprite(game->mlx, game->images->exit_open_img, game->map, 'E');
-	ft_put_sprite(game->mlx, game->images->exit_close_img, game->map, 'E');
-	ft_put_sprite(game->mlx, game->images->consumable_img, game->map, 'C');
+	ft_put_sprite(game->mlx, game->images->ex_opn_img, game->map, 'E');
+	ft_put_sprite(game->mlx, game->images->ex_cls_img, game->map, 'E');
+	ft_put_sprite(game->mlx, game->images->consum_img, game->map, 'C');
 	ft_put_sprite(game->mlx, game->images->enemy_img, game->map, 'B');
 	ft_put_sprite(game->mlx, game->images->player_img, game->map, 'P');
 	game_init(game);

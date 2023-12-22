@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:27:47 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 11:03:30 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/12/22 11:16:31 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@ typedef struct map
 
 typedef struct images
 {
-	mlx_texture_t	*exit_open_tex;
-	mlx_image_t		*exit_open_img;
-	mlx_texture_t	*exit_close_tex;
-	mlx_image_t		*exit_close_img;
-	mlx_texture_t	*consumable_tex;
-	mlx_image_t		*consumable_img;
+	mlx_texture_t	*ex_opn_tex;
+	mlx_image_t		*ex_opn_img;
+	mlx_texture_t	*ex_cls_tex;
+	mlx_image_t		*ex_cls_img;
+	mlx_texture_t	*consum_tex;
+	mlx_image_t		*consum_img;
 	mlx_texture_t	*player_tex;
 	mlx_image_t		*player_img;
 	mlx_texture_t	*wall_tex;
