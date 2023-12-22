@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:10:44 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 11:19:58 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/12/22 11:40:30 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	game_init(t_game *game)
 	game->moves = 0;
 	game->str_print = ft_strjoin("Moves: ", "0");
 	game->counter_img = mlx_put_string(game->mlx, game->str_print, 0, 0);
+	ft_printf("Moves: %d\n", game->moves);
 }
 
 int32_t	main(int argc, char **argv)
