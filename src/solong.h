@@ -6,15 +6,15 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:27:47 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/12 13:15:24 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/12/22 01:20:13 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SOLONG_H
 # define SOLONG_H
 
-# define BLOCK_WIDTH 64
-# define BLOCK_HEIGHT 64
+# define BLOCK_W 64
+# define BLOCK_H 64
 
 # include "../lib/MLX42/include/MLX42/MLX42.h"
 # include "../lib/libft/libft.h"
@@ -65,6 +65,25 @@ typedef struct game
 	mlx_image_t	*counter_img;
 }			t_game;
 
+// errors.c
+void		error(void);
+void		error_argc(int argc);
+
+// hook_utils.c
+void		is_consumable(t_game *game, size_t y_player, size_t x_player);
+void		is_enemy(t_game *game, size_t y_player, size_t x_player);
+void		is_exit(t_game *game, size_t y_player, size_t x_player);
+void		is_esc_pressed(mlx_key_data_t keydata, t_game *game);
+void		is_wsad_pressed(mlx_key_data_t keydata, t_game *game,
+				size_t *y_player, size_t *x_player);
+
+// images.c
+void		img_and_tex(char *path, mlx_t *mlx,
+				mlx_texture_t **tex, mlx_image_t **img);
+t_images	*load_images(mlx_t *mlx);
+void		ft_put_sprite(mlx_t *mlx, mlx_image_t *img,
+				t_map *map, char symbol);
+
 // map_check.c
 
 /**
@@ -82,13 +101,13 @@ typedef struct game
  * 
  * @return map as an array of char*
  */
-t_map	*get_map(char *str);
+t_map		*get_map(char *str);
 
 // map_utils.c
-char	**map_to_array(int fd);
-char	**map_file_to_array(char *map_name);
-void	get_player_pos(char **map_array, t_map *map);
-void	map_flood_fill(char **map_array, size_t y, size_t x);
+char		**map_to_array(int fd);
+char		**map_file_to_array(char *map_name);
+void		get_player_pos(char **map_array, t_map *map);
+void		map_flood_fill(char **map_array, size_t y, size_t x);
 
 // utils.c:
 
@@ -102,10 +121,10 @@ void	map_flood_fill(char **map_array, size_t y, size_t x);
  * 
  * @return The number of strings in the array.
  */
-int		ft_arrlen(char **arr);
-char	**ft_arrdup(char **arr);
-int		free_array(char **array);
-int		count_char_in_str(char *str, char to_find);
-int		nof_char_in_arr(char **array, char to_find);
+int			ft_arrlen(char **arr);
+char		**ft_arrdup(char **arr);
+int			free_array(char **array);
+int			count_char_in_str(char *str, char to_find);
+int			nof_char_in_arr(char **array, char to_find);
 
 #endif
