@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 01:06:12 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 01:06:27 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/12/22 11:20:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,18 @@ void	img_and_tex(char *path, mlx_t *mlx,
 
 t_images	*load_images(mlx_t *mlx)
 {
-	t_images	*images;
+	t_images	*imgs;
 
-	images = (t_images *) malloc(1 * sizeof(t_images));
-	if (!images)
+	imgs = (t_images *) malloc(1 * sizeof(t_images));
+	if (!imgs)
 		error();
-	img_and_tex("./img/Wizard_Man_64x64.png", mlx, &images->player_tex, &images->player_img);
-	img_and_tex("./img/Wall_64x64.png", mlx, &images->wall_tex, &images->wall_img);
-	img_and_tex("./img/Consumable_64x64.png", mlx, &images->consumable_tex, &images->consumable_img);
-	img_and_tex("./img/gate_closed_64x64.png", mlx, &images->exit_close_tex, &images->exit_close_img);
-	img_and_tex("./img/gate_opened_64x64.png", mlx, &images->exit_open_tex, &images->exit_open_img);
-	img_and_tex("./img/skull_64x64-3.png", mlx, &images->enemy_tex, &images->enemy_img);
-	return (images);
+	img_and_tex("./img/player.png", mlx, &imgs->player_tex, &imgs->player_img);
+	img_and_tex("./img/wall.png", mlx, &imgs->wall_tex, &imgs->wall_img);
+	img_and_tex("./img/consum.png", mlx, &imgs->consum_tex, &imgs->consum_img);
+	img_and_tex("./img/ex_clse.png", mlx, &imgs->ex_cls_tex, &imgs->ex_cls_img);
+	img_and_tex("./img/ex_open.png", mlx, &imgs->ex_opn_tex, &imgs->ex_opn_img);
+	img_and_tex("./img/skull.png", mlx, &imgs->enemy_tex, &imgs->enemy_img);
+	return (imgs);
 }
 
 void	ft_put_sprite(mlx_t *mlx, mlx_image_t *img, t_map *map, char symbol)
@@ -60,4 +60,18 @@ void	ft_put_sprite(mlx_t *mlx, mlx_image_t *img, t_map *map, char symbol)
 		}
 		y++;
 	}
+}
+
+void	put_score(t_game *game)
+{
+	char	*old_str;
+	char	*str_moves;
+
+	old_str = game->str_print;
+	str_moves = ft_itoa(game->moves);
+	game->str_print = ft_strjoin("Moves: ", str_moves);
+	free(old_str);
+	free(str_moves);
+	mlx_delete_image(game->mlx, game->counter_img);
+	game->counter_img = mlx_put_string(game->mlx, game->str_print, 0, 0);
 }

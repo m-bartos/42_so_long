@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 01:04:49 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 01:14:32 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/12/22 11:04:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,10 @@ void	error_argc(int argc)
 		ft_putstr_fd("Try run with: ./so_long map1.ber\n", 1);
 		exit(1);
 	}
+}
+
+void	error_map_open(void)
+{
+	ft_putstr_fd("Error: Map is not closed.\n", 2);
+	exit (1);
 }

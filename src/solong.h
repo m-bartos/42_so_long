@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:27:47 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 01:20:13 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/12/22 11:45:43 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,6 @@
 
 # include "../lib/MLX42/include/MLX42/MLX42.h"
 # include "../lib/libft/libft.h"
-//# include <sys/wait.h>
-//# include <X11/X.h>
-//# include <X11/keysym.h>
 # include <stddef.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -41,12 +38,12 @@ typedef struct map
 
 typedef struct images
 {
-	mlx_texture_t	*exit_open_tex;
-	mlx_image_t		*exit_open_img;
-	mlx_texture_t	*exit_close_tex;
-	mlx_image_t		*exit_close_img;
-	mlx_texture_t	*consumable_tex;
-	mlx_image_t		*consumable_img;
+	mlx_texture_t	*ex_opn_tex;
+	mlx_image_t		*ex_opn_img;
+	mlx_texture_t	*ex_cls_tex;
+	mlx_image_t		*ex_cls_img;
+	mlx_texture_t	*consum_tex;
+	mlx_image_t		*consum_img;
 	mlx_texture_t	*player_tex;
 	mlx_image_t		*player_img;
 	mlx_texture_t	*wall_tex;
@@ -68,14 +65,20 @@ typedef struct game
 // errors.c
 void		error(void);
 void		error_argc(int argc);
+void		error_map_open(void);
 
 // hook_utils.c
 void		is_consumable(t_game *game, size_t y_player, size_t x_player);
 void		is_enemy(t_game *game, size_t y_player, size_t x_player);
 void		is_exit(t_game *game, size_t y_player, size_t x_player);
+
+// hook.c
 void		is_esc_pressed(mlx_key_data_t keydata, t_game *game);
+void		move_player_x(t_game *game, size_t *x_player, int x);
+void		move_player_y(t_game *game, size_t *y_player, int y);
 void		is_wsad_pressed(mlx_key_data_t keydata, t_game *game,
 				size_t *y_player, size_t *x_player);
+void		keyhook(mlx_key_data_t keydata, void *param);
 
 // images.c
 void		img_and_tex(char *path, mlx_t *mlx,
@@ -83,6 +86,7 @@ void		img_and_tex(char *path, mlx_t *mlx,
 t_images	*load_images(mlx_t *mlx);
 void		ft_put_sprite(mlx_t *mlx, mlx_image_t *img,
 				t_map *map, char symbol);
+void		put_score(t_game *game);
 
 // map_check.c
 
