@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 01:06:12 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 11:16:31 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/12/22 11:20:04 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,18 @@ void	ft_put_sprite(mlx_t *mlx, mlx_image_t *img, t_map *map, char symbol)
 		}
 		y++;
 	}
+}
+
+void	put_score(t_game *game)
+{
+	char	*old_str;
+	char	*str_moves;
+
+	old_str = game->str_print;
+	str_moves = ft_itoa(game->moves);
+	game->str_print = ft_strjoin("Moves: ", str_moves);
+	free(old_str);
+	free(str_moves);
+	mlx_delete_image(game->mlx, game->counter_img);
+	game->counter_img = mlx_put_string(game->mlx, game->str_print, 0, 0);
 }

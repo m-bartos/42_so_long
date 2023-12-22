@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:27:47 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 11:16:31 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/12/22 11:20:41 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void		img_and_tex(char *path, mlx_t *mlx,
 t_images	*load_images(mlx_t *mlx);
 void		ft_put_sprite(mlx_t *mlx, mlx_image_t *img,
 				t_map *map, char symbol);
+void		put_score(t_game *game);
 
 // map_check.c
 

@@ -6,25 +6,11 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:10:44 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 11:16:23 by mbartos          ###   ########.fr       */
+/*   Updated: 2023/12/22 11:19:58 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "solong.h"
-
-void	put_score(t_game *game)
-{
-	char	*old_str;
-	char	*str_moves;
-
-	old_str = game->str_print;
-	str_moves = ft_itoa(game->moves);
-	game->str_print = ft_strjoin("Moves: ", str_moves);
-	free(old_str);
-	free(str_moves);
-	mlx_delete_image(game->mlx, game->counter_img);
-	game->counter_img = mlx_put_string(game->mlx, game->str_print, 0, 0);
-}
 
 void	keyhook(mlx_key_data_t keydata, void *param)
 {
