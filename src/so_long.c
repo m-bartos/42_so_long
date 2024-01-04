@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 14:10:44 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 11:43:19 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/01/04 12:56:22 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,16 @@ void	game_init(t_game *game)
 	game->str_print = ft_strjoin("Moves: ", "0");
 	game->counter_img = mlx_put_string(game->mlx, game->str_print, 0, 0);
 	ft_printf("Moves: %d\n", game->moves);
+}
+
+void	game_clean(t_game *game)
+{
+	mlx_close_window(game->mlx);
+	mlx_terminate(game->mlx);
+	free_array(game->map->array);
+	free(game->str_print);
+	free(game->images);
+	free(game->map);
 }
 
 int32_t	main(int argc, char **argv)
@@ -47,5 +57,6 @@ int32_t	main(int argc, char **argv)
 	game_init(game);
 	mlx_key_hook(game->mlx, &keyhook, (void *) game);
 	mlx_loop(game->mlx);
+	game_clean(game);
 	return (EXIT_SUCCESS);
 }
