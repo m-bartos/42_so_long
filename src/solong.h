@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:27:47 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 11:45:43 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/01/04 12:57:18 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,14 @@ void		put_score(t_game *game);
  */
 t_map		*get_map(char *str);
 
-// map_utils.c
+// map_check_utils.c
 char		**map_to_array(int fd);
 char		**map_file_to_array(char *map_name);
 void		get_player_pos(char **map_array, t_map *map);
 void		map_flood_fill(char **map_array, size_t y, size_t x);
+
+// so_long.c
+void		game_clean(t_game *game);
 
 // utils.c:
 

@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 01:16:23 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 11:44:16 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/01/04 12:59:44 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,7 @@ void	is_exit(t_game *game, size_t y_player, size_t x_player)
 	{
 		ft_printf("||          You won!         ||\n", game->moves);
 		ft_printf("|| Final number of moves: %d ||\n", game->moves);
-		mlx_close_window(game->mlx);
-		mlx_terminate(game->mlx);
-		free_array(game->map->array);
-		free(game->str_print);
-		free(game->images);
+		game_clean(game);
 		exit(0);
 	}
 }
