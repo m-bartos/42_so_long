@@ -1,7 +1,7 @@
 # 42_so_long - The lettuce Magican
 This project is a very small 2D game. Its purpose is to work with textures, sprites, and some other very basic gameplay elements.
 
-![so_long](https://github.com/m-bartos/42_so_long/assets/28412526/24ff2ded-d21e-4083-b7df-7d4176a56cad)
+![so_long](https://github.com/m-bartos/42_so_long/assets/28412526/d26f6fce-0aa9-4d4f-b785-274825eb22d4)
 
 ## Game:
 The player’s goal is to collect every collectible (lettuce) present on the map with the magican, then escape
