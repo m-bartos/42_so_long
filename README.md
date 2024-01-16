@@ -32,6 +32,7 @@ be valid
 - How to work with the graphical library MLX42
 - How to handle windows, events (hooks), pictures and textures, colors, etc
 - Got more familiar with structs and struct pointers
+- How to use git branches and GitHub pull requests
 
 ## Thanks and credits
 * [rone3190 - wizard image](https://rone3190.itch.io/wizard-128x128)
