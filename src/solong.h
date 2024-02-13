@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:27:47 by mbartos           #+#    #+#             */
-/*   Updated: 2024/01/04 12:57:18 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/02/13 11:38:59 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ typedef struct game
 // errors.c
 void		error(void);
 void		error_argc(int argc);
-void		error_map_open(void);
+void		error_map_open(char **map_array, t_map *map);
+void		exit_pec(char **map_array, char **map_flooded, t_map *map);
 
 // hook_utils.c
 void		is_consumable(t_game *game, size_t y_player, size_t x_player);
@@ -109,7 +110,7 @@ t_map		*get_map(char *str);
 
 // map_check_utils.c
 char		**map_to_array(int fd);
-char		**map_file_to_array(char *map_name);
+char		**map_file_to_array(char *map_name, t_map *map);
 void		get_player_pos(char **map_array, t_map *map);
 void		map_flood_fill(char **map_array, size_t y, size_t x);
 

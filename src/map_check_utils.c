@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 12:00:00 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/15 15:28:00 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/02/13 11:36:19 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	**map_to_array(int fd)
 	return (map_array);
 }
 
-char	**map_file_to_array(char *map_name)
+char	**map_file_to_array(char *map_name, t_map *map)
 {
 	int		fd;
 	char	*map_path;
@@ -53,7 +53,8 @@ char	**map_file_to_array(char *map_name)
 	if (fd < 0)
 	{
 		ft_putstr_fd("Error: Map not found. It has to be in map folder.\n", 2);
-		exit (1);
+		free(map);
+		exit(1);
 	}
 	else
 		ft_putstr_fd("Map found!\n", 1);
@@ -61,7 +62,8 @@ char	**map_file_to_array(char *map_name)
 	if (map_array == NULL)
 	{
 		ft_putstr_fd("Error: Map file empty\n", 2);
-		exit(1);
+		free(map);
+		exit(2);
 	}
 	return (map_array);
 }
@@ -71,6 +73,8 @@ void	get_player_pos(char **map_array, t_map *map)
 	size_t	y;
 	size_t	x;
 
+	map->x_player = 0;
+	map->y_player = 0;
 	y = 0;
 	while (map_array[y])
 	{

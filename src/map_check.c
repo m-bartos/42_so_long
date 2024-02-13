@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 12:34:42 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 11:03:03 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/02/13 11:39:21 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	check_suffix(char *str)
 	free(suf);
 }
 
-void	check_of_pec(char **map_array, char **map_flooded)
+void	check_of_pec(char **map_array, char **map_flooded, t_map *map)
 {
 	if (nof_char_in_arr(map_array, 'E') == 1
 		&& nof_char_in_arr(map_flooded, 'e'))
@@ -65,7 +65,7 @@ void	check_of_pec(char **map_array, char **map_flooded)
 	else
 	{
 		ft_putstr_fd("Error: Incorrect number of rechable exits!\n", 2);
-		exit(1);
+		exit_pec(map_array, map_flooded, map);
 	}
 	if (nof_char_in_arr(map_array, 'P') == 1
 		&& nof_char_in_arr(map_flooded, 'p'))
@@ -73,7 +73,7 @@ void	check_of_pec(char **map_array, char **map_flooded)
 	else
 	{
 		ft_putstr_fd("Error: Incorrect number of rechable starts!\n", 2);
-		exit(1);
+		exit_pec(map_array, map_flooded, map);
 	}
 	if (nof_char_in_arr(map_array, 'C') >= 1
 		&& nof_char_in_arr(map_array, 'C') == nof_char_in_arr(map_flooded, 'c'))
@@ -81,11 +81,11 @@ void	check_of_pec(char **map_array, char **map_flooded)
 	else
 	{
 		ft_putstr_fd("Error: Incorrect number of rechable collectibles!\n", 2);
-		exit(1);
+		exit_pec(map_array, map_flooded, map);
 	}
 }
 
-void	check_rectang_map(char **map_array)
+void	check_rectang_map(char **map_array, t_map *map)
 {
 	size_t	i;
 
@@ -95,6 +95,8 @@ void	check_rectang_map(char **map_array)
 	if (!(i >= 3))
 	{
 		ft_putstr_fd("Error: Not enough of map lines (must be >3).\n", 2);
+		free_array(map_array);
+		free(map);
 		exit(1);
 	}
 	i = 1;
@@ -103,6 +105,8 @@ void	check_rectang_map(char **map_array)
 		if (ft_strlen(map_array[0]) != ft_strlen(map_array[i]))
 		{
 			ft_putstr_fd("Error: Map is not rectangular.\n", 2);
+			free_array(map_array);
+			free(map);
 			exit(1);
 		}
 		i++;
@@ -110,7 +114,7 @@ void	check_rectang_map(char **map_array)
 	ft_putstr_fd("Map is correctly rectangular.\n", 1);
 }
 
-void	check_closed_map(char **map_array)
+void	check_closed_map(char **map_array, t_map *map)
 {
 	size_t	y;
 	size_t	x;
@@ -124,7 +128,7 @@ void	check_closed_map(char **map_array)
 			while (map_array[y][x])
 			{
 				if (map_array[y][x] != '1')
-					error_map_open();
+					error_map_open(map_array, map);
 				x++;
 			}
 		}
@@ -132,7 +136,7 @@ void	check_closed_map(char **map_array)
 		{
 			if (map_array[y][0] != '1'
 				|| map_array[y][ft_strlen(map_array[y]) - 1] != '1')
-				error_map_open();
+				error_map_open(map_array, map);
 		}
 		y++;
 	}
@@ -150,13 +154,13 @@ t_map	*get_map(char *str)
 	ft_putstr_fd("-RUNNING_MAP_CHECK-\n", 1);
 	ft_putstr_fd("-------------------\n", 1);
 	check_suffix(str);
-	map_array = map_file_to_array(str);
-	check_rectang_map(map_array);
-	check_closed_map(map_array);
+	map_array = map_file_to_array(str, map);
+	check_rectang_map(map_array, map);
+	check_closed_map(map_array, map);
 	get_player_pos(map_array, map);
 	map_flooded = ft_arrdup(map_array);
 	map_flood_fill(map_flooded, map->y_player, map->x_player);
-	check_of_pec(map_array, map_flooded);
+	check_of_pec(map_array, map_flooded, map);
 	ft_putstr_fd("-------------------\n", 1);
 	ft_putstr_fd("---MAP_CHECK_OK----\n", 1);
 	ft_putstr_fd("-------------------\n\n", 1);

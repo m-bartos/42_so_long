@@ -6,7 +6,7 @@
 /*   By: mbartos <mbartos@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 01:04:49 by mbartos           #+#    #+#             */
-/*   Updated: 2023/12/22 11:04:04 by mbartos          ###   ########.fr       */
+/*   Updated: 2024/02/13 11:39:10 by mbartos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,18 @@ void	error_argc(int argc)
 	}
 }
 
-void	error_map_open(void)
+void	error_map_open(char **map_array, t_map *map)
 {
 	ft_putstr_fd("Error: Map is not closed.\n", 2);
+	free_array(map_array);
+	free(map);
 	exit (1);
+}
+
+void	exit_pec(char **map_array, char **map_flooded, t_map *map)
+{
+	free_array(map_array);
+	free_array(map_flooded);
+	free(map);
+	exit(1);
 }
